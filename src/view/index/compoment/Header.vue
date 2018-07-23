@@ -46,9 +46,9 @@
       position: fixed
       top: 0px
       width: 100%
-      height: 50px
+      height: 8%
       z-index: 1
-      background: #87cafac7
+      background: #000000bd
     .header-left
        width: 200px
       .header-left-logo
@@ -59,7 +59,8 @@
         margin-left: 10px
         margin-top : 5px
     .header-right
-      margin-left 1000px
+      margin-left: auto
+      margin-right :-30px
       display : flex
       width: 200px
       .header-right-notice
