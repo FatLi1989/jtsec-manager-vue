@@ -34,6 +34,7 @@
   import Qs from 'qs'
   import router from '../../router/router.js'
   export default {
+    name: 'Login',
     data () {
       return {
         componentName: 'SignIn',

@@ -1,5 +1,5 @@
 import Login from '../view/login/Login.vue'
-import index from '../view/index/index.vue'
+import index from '../view/index/Index.vue'
 import VueRouter from 'vue-router'
 
 const router = new VueRouter({
