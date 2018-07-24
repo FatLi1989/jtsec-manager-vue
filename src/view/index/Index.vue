@@ -8,7 +8,7 @@
 <script type="text/ecmascript-6">
   import IndexFooter from './compoment/Footer'
   import IndexHeader from './compoment/Header'
-  import IndexBody from './compoment/Body.vue'
+  import IndexBody from './compoment/section.vue'
   import store from '../../store'
 
   export default {
@@ -21,9 +21,6 @@
 </script>
 <style lang="stylus" scoped>
 .index
-  display: flex
-  overflow-scrolling auto
-  flex-direction: column
-  min-height: 100vh
-  background: rebeccapurple
+  display flex
+  height  100vh
 </style>
