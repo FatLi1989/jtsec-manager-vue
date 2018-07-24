@@ -9,6 +9,7 @@
       <div class="header-right">
         <div class="header-right-notice">
           <a href="#" class="iconfont">&#xe7a1;</a>
+          <span>${{count}}</span>
         </div>
         <div class="header-right-info">
           <img class="header-img" src="../../../resource/img/header-Img.jpg"/>
@@ -30,7 +31,7 @@
             }
         },
         methods: {
-          menuClickHandler: () => alert(2),
+          menuClickHandler: () => alert(this.$store.state.count),
           infoClickHandler: () => alert(1)
         }
     }
@@ -44,10 +45,10 @@
   .header
       display: flex
       position: fixed
-      top: 0px
-      width: 100%
-      height: 8%
-      z-index: 1
+      margin: 0;
+      padding 0
+      width : 100%
+      height : 5
       background: #000000bd
     .header-left
        width: 200px

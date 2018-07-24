@@ -1,12 +1,12 @@
 <template>
   <div class="index-body">
-    <div class="index-body-left-menu">
+    <div :style="LeftMenuObject">
       菜单1
     </div>
     <div class="index-body-content">
       内容
     </div>
-    <div class="index-body-right-menu">
+    <div :style="RightMenuObject">
       菜单2
     </div>
   </div>
@@ -16,7 +16,16 @@
     export default {
         data () {
             return {
-
+              LeftMenuObject: {
+                position: 'flex',
+                left: '0px',
+                width: '20%'
+              },
+              RightMenuObject: {
+                position: 'flex',
+                width: '20%',
+                right: '0px'
+              }
             }
         }
     }
@@ -25,16 +34,9 @@
 <style lang="stylus" scoped>
 .index-body
   display flex
-  padding-bottom : 80%
-  .index-body-left-menu
-    border black solid
-    width : 20%
-    top: 50px
+  flex :1
+  margin-top 50px
   .index-body-content
-    flex-grow :1
-    border black solid
-  .index-body-right-menu
-    right :0px
-    border black solid
-    width : 20%
+   flex 1
+   background rosybrown
 </style>

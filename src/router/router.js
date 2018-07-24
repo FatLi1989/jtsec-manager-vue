@@ -1,6 +1,8 @@
 import Login from '../view/login/Login.vue'
 import index from '../view/index/Index.vue'
 import VueRouter from 'vue-router'
+import Vue from 'vue'
+Vue.use(VueRouter);
 
 const router = new VueRouter({
   mode: 'history',

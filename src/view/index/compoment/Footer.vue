@@ -16,13 +16,13 @@
 <style lang="stylus" scoped>
 .footer
   position fixed
-  background #f5f5f5b8
-  line-height 32px
-  color #0f0f0f
+  background #000000bd
+  height 4%
+  color white
   width 100%
   bottom 0px
-  z-index 1
   .footer-font
+   margin-top 0.4%
    text-align center
    float right
    margin-right 20px

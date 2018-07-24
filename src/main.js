@@ -5,9 +5,7 @@ import App from './App';
 import './assets/css/common.css';
 import './assets/js/bootstrap.js';
 import routers from './router/router.js'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter);
+import store from './store'
 
 Vue.config.productionTip = false;
 
@@ -15,5 +13,6 @@ Vue.config.productionTip = false;
 new Vue({
   el: '#app',
   router: routers,
+  store,
   render: h => h(App)
 });
