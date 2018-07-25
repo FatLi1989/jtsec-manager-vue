@@ -1,12 +1,13 @@
 <template>
-  <transition>
+  <fade-animation>
     <div class="menu" v-show="show">
-     <h1>right menu</h1>
+       <h1>right menu</h1>
     </div>
-  </transition>
+  </fade-animation>
 </template>
 
 <script>
+   import FadeAnimation from '../../../common/fade/FadeAnimationRight'
     export default {
         name: 'RightMenu',
         data () {
@@ -17,6 +18,9 @@
           show () {
             return this.$store.state.rightMenu
           }
+      },
+      components: {
+        FadeAnimation
       }
     }
 </script>
@@ -25,7 +29,7 @@
  .v-enter, .v-leave-to
   opacity: 0
  .v-enter-active, .v-leave-active
-  transition: opacity  2s
+  transition: opacity  1s
  .menu
   position: fixed
   width: 200px

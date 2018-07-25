@@ -56,4 +56,5 @@
     margin-left 200px
     background white
     color black
+    transition : margin-left 1s, margin-right 1s
 </style>

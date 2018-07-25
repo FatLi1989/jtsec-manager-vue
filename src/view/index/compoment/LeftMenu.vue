@@ -1,8 +1,6 @@
 <template>
- <transition>
     <div class="menu" :class="{left: Left}">
     </div>
- </transition>
 </template>
 <script>
     export default {
@@ -75,10 +73,6 @@
 </script>
 
 <style lang="stylus" scoped>
-  .v-enter, .v-leave-to
-    opacity: 0
-  .v-enter-active, .v-leave-active
-   transition: opacity 2s
   .left
     width 50px !important
   .menu
@@ -91,4 +85,5 @@
     width: 200px
     height: 100%
     background: rgba(0, 0, 0, 0.71)
+    transition : width 1s
 </style>
