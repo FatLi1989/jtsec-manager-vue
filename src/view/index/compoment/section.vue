@@ -1,7 +1,10 @@
 <template>
   <div class="index-body">
     <left-menu></left-menu>
-    <div class="index-body-content">
+    <div class="index-body-content" :class="{leftMenuClass: left, rightMenuClass: right}">
+      <div style="float: right">
+        <span>测试</span>
+      </div>
       <div v-for="(item, indexs) in list" :key="indexs">
         <span>{{item}}</span>
       </div>
@@ -11,27 +14,39 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import leftMenu from './LeftMenu'
-  import rightMenu from './RightMenu'
+  import LeftMenu from './LeftMenu'
+  import RightMenu from './RightMenu'
     export default {
-        data () {
-            return {
-              list: []
-            }
-        },
+      data () {
+        return {
+          list: []
+        }
+      },
       components: {
-        leftMenu, rightMenu
+        LeftMenu, RightMenu
+      },
+      computed: {
+        right () {
+          return this.$store.state.rightMenu
+        },
+        left () {
+          return this.$store.state.leftMenu
+        }
       },
       mounted: function () {
-         let _this = this;
-          for (let i = 0; i < 100; i++) {
-            _this.list.push(i)
-          }
+        let _this = this;
+        for (let i = 0; i < 100; i++) {
+          _this.list.push(i)
+        }
       }
     }
 </script>
 
 <style lang="stylus" scoped>
+.rightMenuClass
+ margin-right 200px
+.leftMenuClass
+ margin-left 50px !important
 .index-body
   display flex
   flex :1
@@ -39,7 +54,6 @@
   .index-body-content
     flex 1
     margin-left 200px
-    margin-right 200px
     background white
     color black
 </style>

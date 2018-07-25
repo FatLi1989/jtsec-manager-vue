@@ -6,8 +6,10 @@ import './assets/css/common.css';
 import './assets/js/bootstrap.js';
 import routers from './router/router.js'
 import store from './store'
+import LiquorTree from 'liquor-tree'
 
 Vue.config.productionTip = false;
+Vue.use(LiquorTree);
 
 /* eslint-disable no-new */
  new Vue({

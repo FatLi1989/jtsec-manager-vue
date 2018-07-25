@@ -15,15 +15,16 @@
 
 <style lang="stylus" scoped>
 .footer
+  margin-left  200px
   position fixed
-  background #000000bd
+  background #ffffff00
   height 4%
-  color white
+  color black
   width 100%
   bottom 0px
   .footer-font
    margin-top 0.4%
    text-align center
    float right
-   margin-right 20px
+   margin-right 15%
 </style>
