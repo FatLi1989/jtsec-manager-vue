@@ -6,7 +6,7 @@
         <span v-if="!show">{{item.name}}</span>
       </div>
       <div v-if="item.children" class="item-child">
-        <child-tree :list="item.children" :key="item.id" />
+        <child-tree :list="item.children && showM" :key="item.id" />
       </div>
     </div>
   </div>

@@ -5,6 +5,11 @@
         <source src="@/resource/video/Ipad.mp4" type="video/webm"/>
       </video>
     </div>
+    <transition
+      appear
+      enter-active-class="v-enter-active"
+      appear-active-class="animated rollIn"
+    >
     <div class="row login-content ">
       <!-- 左侧信息 -->
       <div class="col-xs-3 login-content-left">
@@ -24,6 +29,7 @@
         </form>
       </div>
     </div>
+    </transition>
   </div>
 </template>
 
