@@ -1,75 +1,62 @@
 <template>
-    <div class="menu" :class="{left: Left}">
+    <div class="menu" :class="{left: show}" >
+      <child-tree :list="list"></child-tree>
     </div>
 </template>
 <script>
-    export default {
-      name: 'LeftMenu',
-      data () {
-        return {
-          list: [{
-            belongsname: '',
-            id: 901,
-            isleaf: 0,
-            name: 'XJBHX-2标项目部',
-            pid: '',
-            type: '',
+  import ChildTree from './tree'
+
+  export default {
+    name: 'LeftMenu',
+    data () {
+      return {
+        list: [{
+          id: 901,
+          name: 'XJBHX-2标项目部',
+          children: [{
+            id: 902,
+            name: '综合部(办公室)'
+          }, {
+            id: 903,
+            name: '工程部(工技部/技术部)'
+          }]
+        },
+          {
+            id: 904,
+            name: '安质部',
             children: [{
-              belongsname: '',
-              id: 902,
-              isleaf: 1,
-              name: '综合部(办公室)',
-              pid: '901',
-              type: ''
-            }, {
-              belongsname: '',
-              id: 903,
-              isleaf: 1,
-              name: '工程部(工技部/技术部)',
-              pid: '901',
-              type: ''
+              id: 907,
+              name: '中心试验室'
             }]
+          }, {
+            id: 908,
+            name: '菜单3'
           },
-            {
-              belongsname: '',
-              id: 904,
-              isleaf: 1,
-              name: '安质部',
-              pid: '901',
-              type: '',
-              children: [{
-                belongsname: '',
-                id: 907,
-                isleaf: 1,
-                name: '中心试验室',
-                pid: '901',
-                type: ''
-              }]
-            }, {
-              belongsname: '',
-              id: 908,
-              isleaf: 0,
-              name: '菜单3',
-              pid: '',
-              type: ''
-            },
-            {
-              belongsname: '',
-              id: 909,
-              isleaf: 0,
-              name: '菜单4',
-              pid: '',
-              type: ''
-            }
-          ]
-        }
-      },
-        computed: {
-          Left () {
-            return this.$store.state.leftMenu
+          {
+            id: 909,
+            name: '菜单4'
+          }
+        ],
+        options: {
+          propertyNames: {
+            'text': 'name',
+            'deletion': true
           }
         }
+      }
+    },
+    methods: {
+      focus: () => alert(1)
+    },
+    computed: {
+      show () {
+        return this.$store.state.leftMenu
+      }
+    },
+    components: {
+      ChildTree
     }
+  }
 </script>
 
 <style lang="stylus" scoped>
@@ -79,7 +66,6 @@
     display flex
     flex-direction column
     position: fixed
-    color #eb9316
     z-index 2
     left: 0px
     width: 200px

@@ -9,7 +9,6 @@
       <div class="header-right">
         <div class="header-right-notice">
           <a href="#" class="iconfont">&#xe7a1;</a>
-          <span>{{count}}</span>
         </div>
         <div class="header-right-info">
           <img class="header-img" src="../../../resource/img/header-Img.jpg"/>

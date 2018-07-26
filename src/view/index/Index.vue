@@ -9,11 +9,9 @@
   import IndexFooter from './compoment/Footer'
   import IndexHeader from './compoment/Header'
   import IndexBody from './compoment/section.vue'
-  import store from '../../store'
 
   export default {
     name: 'index',
-    store,
     components: {
       IndexFooter, IndexHeader, IndexBody
     }

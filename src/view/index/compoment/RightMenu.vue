@@ -37,4 +37,5 @@
   right: 0px
   color white
   background: rgba(0, 0, 0, 0.71)
+  z-inde 1
 </style>
