@@ -8,7 +8,7 @@
 
     <zoom-in-hinge-out>
       <div class="menu left" v-if="show">
-        <i class="iconfont item" v-for="item of list" :key="item.id">&#xe64d;</i>
+          <i class="iconfont item" :class="item.img" v-for="item of list" :key="item.id"></i>
       </div>
     </zoom-in-hinge-out>
   </div>
@@ -24,29 +24,36 @@
       return {
         list: [{
           id: 901,
-          name: 'XJBHX-2标项目部',
+          name: '主页',
+          img: 'icon-zhuye',
           children: [{
             id: 902,
-            name: '综合部(办公室)'
+            name: '我的主页',
+            img: 'icon-tongzhi1'
           }, {
             id: 903,
-            name: '工程部(工技部/技术部)'
+            name: '个人信息',
+            img: 'icon-dengluyemianyonghuming'
           }]
         },
           {
             id: 904,
-            name: '安质部',
+            name: '系统管理',
+            img: 'icon-xitongguanli',
             children: [{
               id: 907,
-              name: '中心试验室'
+              name: '中心试验室',
+              img: 'icon-xitongjiankong'
             }]
           }, {
             id: 908,
-            name: '菜单3'
+            name: '系统监控',
+            img: 'icon-xitongjiankongguanli'
           },
           {
             id: 909,
-            name: '菜单4'
+            name: '系统工具',
+            img: 'icon-gongju'
           }
         ],
         options: {
@@ -72,10 +79,10 @@
 </script>
 
 <style lang="stylus" scoped>
-  .v-enter, v-leave-to
+  .v-enter, .v-leave-to
     opacity: 0
-  .v-enter-active, v-leave-active
-    transition: opacity 0.5s
+  .v-enter-active, .v-leave-active
+    transition: opacity 0.1s
   .left
     width 50px !important
   .menu
@@ -97,4 +104,6 @@
     background transparent
     color #fff
     font-size 900
+    &:hover
+     background rgba(0,0,0,0.5)
 </style>
