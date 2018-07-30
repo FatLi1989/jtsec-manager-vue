@@ -1,7 +1,7 @@
 <template>
-    <div class="footer">
-      <span class="footer-font">© 2018 Jtesc. version 1.0  | Design by NovLi</span>
-    </div>
+  <div class="footer">
+    <span class="footer-font">© 2018 Jtesc. version 1.0  | Design by NovLi</span>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">

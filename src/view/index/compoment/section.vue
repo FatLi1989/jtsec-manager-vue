@@ -2,12 +2,7 @@
   <div class="index-body">
     <left-menu></left-menu>
     <div class="index-body-content" :class="{leftMenuClass: left, rightMenuClass: right}">
-      <div style="float: right">
-        <span>测试</span>
-      </div>
-      <div v-for="(item, indexs) in list" :key="indexs">
-        <span>{{item}}</span>
-      </div>
+      <router-view></router-view>
     </div>
     <right-menu></right-menu>
   </div>
@@ -19,7 +14,6 @@
     export default {
       data () {
         return {
-          list: []
         }
       },
       components: {
@@ -34,10 +28,6 @@
         }
       },
       mounted: function () {
-        let _this = this;
-        for (let i = 0; i < 100; i++) {
-          _this.list.push(i)
-        }
       }
     }
 </script>

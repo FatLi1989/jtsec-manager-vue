@@ -1,23 +1,23 @@
 <template>
   <div class="header">
-      <div class="header-left">
-        <img class="header-left-logo" src="../../../resource/img/head-logo.png"/>
+    <div class="header-left">
+      <img class="header-left-logo" src="../../../resource/img/head-logo.png"/>
+    </div>
+    <div class="header-button">
+      <a class="iconfont" @click="leftMenuClickHandler">&#xe606;</a>
+    </div>
+    <div class="header-right">
+      <div class="header-right-notice">
+        <a href="#" class="iconfont">&#xe7a1;</a>
       </div>
-      <div class="header-button">
-        <a class="iconfont" @click="leftMenuClickHandler">&#xe606;</a>
+      <div class="header-right-info">
+        <img class="header-img" src="../../../resource/img/header-Img.jpg"/>
+        <a class="user">{{user}}</a>
       </div>
-      <div class="header-right">
-        <div class="header-right-notice">
-          <a href="#" class="iconfont">&#xe7a1;</a>
-        </div>
-        <div class="header-right-info">
-          <img class="header-img" src="../../../resource/img/header-Img.jpg"/>
-          <a class="user">{{user}}</a>
-        </div>
-        <div class="header-right-menu">
-          <a href="#" @click="rightMenuClickHandler" class="iconfont">&#xe606;</a>
-        </div>
+      <div class="header-right-menu">
+        <a href="#" @click="rightMenuClickHandler" class="iconfont">&#xe606;</a>
       </div>
+    </div>
   </div>
 </template>
 

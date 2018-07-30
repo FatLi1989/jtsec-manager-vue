@@ -1,23 +1,25 @@
 <template>
   <div>
-    <div v-for="item of list" :key="item.id"  @click="click($event)">
-      <div class="item" v-if="item.children">
-          <i class="iconfont" :class="item.img"></i>
-          <span v-if="!show">{{item.name}}</span>
-          <i v-if="item.children" class="iconfont icon-zuojiantou"></i>
-      </div>
-      <div class="item" v-if="!item.children" >
+    <div v-for="item of list" :key="item.id">
+      <div class="item" v-if="(item.children.length === 0 ? false : true)" @click="click(item)">
         <i class="iconfont" :class="item.img"></i>
         <span v-if="!show">{{item.name}}</span>
-        <i v-if="item.children" class="iconfont icon-zuojiantou"></i>
+        <i v-if="(item.expanded === false ? true : false)" class="iconfont icon-zuojiantou"></i>
+        <i v-else-if="(item.expanded === false ? false : true)" class="iconfont icon-f11-copy1-copy"></i>
+      </div>
+      <div class="item" v-if="(item.children.length === 0 ? true : false)">
+        <router-link :to="item.url" class="link">
+          <i class="iconfont" :class="item.img"></i>
+          <span v-if="!show">{{item.name}}</span>
+        </router-link>
       </div>
       <up-to-down>
-          <child-tree :list="item.children" v-show="false" v-if="isShow" :id ="item.id" class="child" />
+        <child-tree :list="item.children" v-show="item.expanded" v-if="(item.children.length === 0 ? false : true)"
+                    class="child"/>
       </up-to-down>
     </div>
   </div>
 </template>
-
 <script type="text/ecmascript-6">
   import UpToDown from '../../../common/fade/UpToDown'
    export default {
@@ -31,36 +33,22 @@
             }
         },
         methods: {
-          click: function (e) {
-            if (e.target.nextElementSibling.style.display === null || e.target.nextElementSibling.style.display === 'none') {
-              e.target.nextElementSibling.style.display = 'block'
-            } else {
-              e.target.nextElementSibling.style.display = 'none'
-            }
+          click: function (item) {
+            item.expanded = !item.expanded
           }
         },
         computed: {
           show () {
             return this.$store.state.leftMenu
-          },
-          isShow () {
-            let show = false;
-            if (this.list.children === null && this.list.children.length) {
-              show = false
-            } else {
-              show = true
-            }
-            return show
           }
         }
     }
 </script>
-
 <style lang="stylus" scoped>
   .v-enter,.v-leave-to
     opacity: 0
   .v-enter-active,.v-leave-active
-    transition: opacity 3s
+    transition: opacity 0.5s
   .item
    width 100%
    height 50px
@@ -71,7 +59,10 @@
    font-size 900
    &:hover
      background #ffffff7a
-  .icon-zuojiantou
+  .link
+    text-decoration none
+    color white
+  .icon-zuojiantou, .icon-f11-copy1-copy
     float right
     margin-right 8px
  .child
