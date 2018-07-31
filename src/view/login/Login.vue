@@ -5,11 +5,6 @@
         <source src="@/resource/video/Ipad.mp4" type="video/webm"/>
       </video>
     </div>
-    <transition
-      appear
-      enter-active-class="v-enter-active"
-      appear-active-class="animated rollIn"
-    >
     <div class="row login-content ">
       <!-- 左侧信息 -->
       <div class="col-xs-3 login-content-left">
@@ -22,13 +17,25 @@
         </ul>
         <strong>还没有账号？ <a href="#" @click="ToRegister()">立即注册&raquo;</a></strong>
       </div>
+      <transition
+        appear
+        enter-active-class="animated rollIn  v-enter-active"
+        leave-active-class="animated rollOut v-leave-active"
+        appear-active-class="animated rollIn"
+      >
       <!-- 右侧信息 -->
       <div class="col-xs-3 login-content-right">
         <form autocomplete="off">
           <component :is="componentName" @transmit="login"></component>
         </form>
       </div>
+      </transition>
     </div>
+    <transition
+      enter-active-class="animated zoomIn  v-enter-active"
+      leave-active-class="animated zoomOut v-leave-active"
+    >
+      <div class="message" v-if="showMessage">{{message}}</div>
     </transition>
   </div>
 </template>
@@ -44,24 +51,37 @@
     data () {
       return {
         componentName: 'SignIn',
-        userInfo: ''
+        userInfo: '',
+        message: '',
+        showMessage: false
       }
     },
     methods: {
       ToRegister: function () {
         this.componentName = 'SignUp'
       },
-      login: (userInfo) => {
+      login: function (userInfo) {
         axios.post('http://localhost:9527/jtsec/login', Qs.stringify({
           username: userInfo[0],
           password: userInfo[1],
           rememberMe: userInfo[2]
         }))
           .then((response) => {
-            if (response.data != null) {
+            if (response.data != null && response.data.code === 100) {
               router.push('/index')
+            } else {
+               this.message = response.data.meg
+               this.showMessage = true
             }
           })
+      }
+    },
+    watch: {
+      showMessage: function (newMsg, oldMeg) {
+        let _this = this
+        setTimeout(function () {
+          _this.showMessage = false
+        }, 3000)
       }
     },
     components: {
@@ -71,6 +91,19 @@
 </script>
 
 <style lang="stylus" scoped>
+  .v-enter,.v-leave-to
+    opacity: 0
+  .v-enter-active,.v-leave-active
+    transition: opacity 1s
+  .message
+    position fixed
+    left  45%
+    top   38%
+    text-align center
+    width 120px
+    line-height 50px
+    color white
+    background rgba(0,0,0,0.3)
   .login-video
     height: auto;
     width: auto;
@@ -85,6 +118,7 @@
       width : 100%
   .login-content
     position: absolute;
+    display flex
     margin-top: 200px;
     color: rgba(255, 255, 255, .95);
     background-size: cover;
