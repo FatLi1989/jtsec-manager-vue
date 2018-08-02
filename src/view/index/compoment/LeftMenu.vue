@@ -1,13 +1,13 @@
 <template>
   <div>
     <zoom-in-hinge-out>
-      <div class="menu" v-if="!show">
-        <child-tree :list="list"></child-tree>
+      <div class="menu" v-if="!leftMenu">
+        <child-tree :list="this.menuInfo"></child-tree>
       </div>
     </zoom-in-hinge-out>
 
     <zoom-in-hinge-out>
-      <div class="menu left" v-if="show">
+      <div class="menu left" v-if="leftMenu">
         <i class="iconfont item" :class="item.img" v-for="item of list" :key="item.id"></i>
       </div>
     </zoom-in-hinge-out>
@@ -17,70 +17,11 @@
   import ChildTree from './tree'
   import ZoomInHingeOut from '../../../common/fade/FadeAnimationleft'
   import FadeAnimation from '../../../common/fade/FadeAnimationRight'
+  import { mapState, mapMutations } from 'vuex'
   export default {
     name: 'LeftMenu',
     data () {
       return {
-        list: [{
-          id: 901,
-          name: '主页',
-          url: '',
-          img: 'icon-zhuye',
-          expanded: false,
-          children: [{
-            id: 902,
-            name: '我的主页',
-            img: 'icon-tongzhi1',
-            url: '/home',
-            expanded: false,
-            children: []
-          }, {
-            id: 903,
-            name: '个人信息',
-            url: '/info',
-            expanded: false,
-            img: 'icon-dengluyemianyonghuming',
-            children: []
-          }]
-        },
-          {
-            id: 904,
-            name: '系统管理',
-            url: '',
-            expanded: false,
-            img: 'icon-xitongguanli',
-            children: [{
-              id: 907,
-              name: '中心试验室',
-              url: '',
-              expanded: false,
-              img: 'icon-xitongjiankong',
-              children: [{
-                 id: 906,
-                 name: '中心试验室',
-                expanded: false,
-                 url: '/try',
-                 img: 'icon-xitongjiankong',
-                 children: []
-              }]
-            }]
-          }, {
-            id: 908,
-            name: '系统监控',
-            url: '',
-            expanded: false,
-            img: 'icon-xitongjiankongguanli',
-            children: []
-          },
-          {
-            id: 909,
-            name: '系统工具',
-            url: '',
-            expanded: false,
-            img: 'icon-gongju',
-            children: []
-          }
-        ],
         options: {
           propertyNames: {
             'text': 'name',
@@ -90,12 +31,11 @@
       }
     },
     methods: {
-      focus: () => alert(1)
+      focus: () => alert(1),
+      ...mapMutations(['setMenuInfo'])
     },
     computed: {
-      show () {
-        return this.$store.state.leftMenu
-      }
+      ...mapState(['leftMenu', 'menuInfo'])
     },
     components: {
       ChildTree, ZoomInHingeOut, FadeAnimation

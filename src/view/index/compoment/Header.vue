@@ -22,6 +22,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import { mapMutations } from 'vuex'
     export default {
         name: 'IndexHeader',
         data () {
@@ -32,13 +33,14 @@
             }
         },
         methods: {
+          ...mapMutations(['leftMenuState', 'rightMenuState']),
           leftMenuClickHandler: function () {
             this.leftMenu = !this.leftMenu;
-            this.$store.commit('leftMenu', this.leftMenu);
+            this.leftMenuState(this.leftMenu)
           },
           rightMenuClickHandler: function () {
             this.rightMenu = !this.rightMenu;
-            this.$store.commit('rightMenu', this.rightMenu);
+            this.rightMenuState(this.rightMenu)
           }
         }
     }

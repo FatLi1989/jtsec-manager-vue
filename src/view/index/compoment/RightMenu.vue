@@ -8,6 +8,7 @@
 
 <script>
    import FadeAnimation from '../../../common/fade/FadeAnimationRight'
+   import { mapState } from 'vuex'
     export default {
         name: 'RightMenu',
         data () {
@@ -15,9 +16,7 @@
           }
         },
       computed: {
-          show () {
-            return this.$store.state.rightMenu
-          }
+        ...mapState({show: 'rightMenu'})
       },
       components: {
         FadeAnimation

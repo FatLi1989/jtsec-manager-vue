@@ -6,14 +6,22 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     leftMenu: true,
-    rightMenu: false
+    rightMenu: false,
+    userInfo: '',
+    menuInfo: JSON
   },
   mutations: {
-    leftMenu (state, leftMenu) {
+    leftMenuState (state, leftMenu) {
       state.leftMenu = leftMenu
     },
-    rightMenu (state, rightMenu) {
+    rightMenuState (state, rightMenu) {
       state.rightMenu = rightMenu;
+    },
+    loginInfo (state, info) {
+      state.userInfo = info
+    },
+    setMenuInfo (state, menu) {
+      state.menuInfo = menu
     }
   }
 })

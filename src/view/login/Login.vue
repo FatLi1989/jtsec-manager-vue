@@ -43,9 +43,9 @@
 <script>
   import SignIn from './componet/SignIn'
   import SignUp from './componet/SignUp'
-  import axios from 'axios'
-  import Qs from 'qs'
   import router from '../../router/router.js'
+  import {mapMutations} from 'vuex'
+
   export default {
     name: 'Login',
     data () {
@@ -60,18 +60,20 @@
       ToRegister: function () {
         this.componentName = 'SignUp'
       },
+      ...mapMutations(['loginInfo']),
       login: function (userInfo) {
-        axios.post('http://localhost:9527/jtsec/login', Qs.stringify({
-          username: userInfo[0],
+        this.loginInfo(userInfo)
+        this.$ajax.post('login', {
+          loginName: userInfo[0],
           password: userInfo[1],
           rememberMe: userInfo[2]
-        }))
+        })
           .then((response) => {
             if (response.data != null && response.data.code === 100) {
               router.push('/index')
             } else {
-               this.message = response.data.meg
-               this.showMessage = true
+              this.message = response.data.meg
+              this.showMessage = true
             }
           })
       }

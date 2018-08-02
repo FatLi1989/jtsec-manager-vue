@@ -3,14 +3,14 @@
     <div v-for="item of list" :key="item.id">
       <div class="item" v-if="(item.children.length === 0 ? false : true)" @click="click(item)">
         <i class="iconfont" :class="item.img"></i>
-        <span v-if="!show">{{item.name}}</span>
+        <span v-if="!leftMenu">{{item.name}}</span>
         <i v-if="(item.expanded === false ? true : false)" class="iconfont icon-zuojiantou"></i>
         <i v-else-if="(item.expanded === false ? false : true)" class="iconfont icon-f11-copy1-copy"></i>
       </div>
       <div class="item" v-if="(item.children.length === 0 ? true : false)">
         <router-link :to="item.url" class="link">
           <i class="iconfont" :class="item.img"></i>
-          <span v-if="!show">{{item.name}}</span>
+          <span v-if="!leftMenu">{{item.name}}</span>
         </router-link>
       </div>
       <up-to-down>
@@ -22,6 +22,7 @@
 </template>
 <script type="text/ecmascript-6">
   import UpToDown from '../../../common/fade/UpToDown'
+  import { mapState } from 'vuex'
    export default {
      name: 'ChildTree',
      components: {UpToDown},
@@ -30,17 +31,17 @@
         },
         data () {
             return {
+              menu: Array
             }
         },
         methods: {
           click: function (item) {
             item.expanded = !item.expanded
+            console.log(this.menu)
           }
         },
         computed: {
-          show () {
-            return this.$store.state.leftMenu
-          }
+          ...mapState(['leftMenu'])
         }
     }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="index-body">
     <left-menu></left-menu>
-    <div class="index-body-content" :class="{leftMenuClass: left, rightMenuClass: right}">
+    <div class="index-body-content" :class="{leftMenuClass: leftMenu, rightMenuClass: rightMenu}">
       <router-view></router-view>
     </div>
     <right-menu></right-menu>
@@ -9,6 +9,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import { mapState } from 'vuex'
   import LeftMenu from './LeftMenu'
   import RightMenu from './RightMenu'
     export default {
@@ -20,14 +21,7 @@
         LeftMenu, RightMenu
       },
       computed: {
-        right () {
-          return this.$store.state.rightMenu
-        },
-        left () {
-          return this.$store.state.leftMenu
-        }
-      },
-      mounted: function () {
+        ...mapState(['leftMenu', 'rightMenu'])
       }
     }
 </script>
