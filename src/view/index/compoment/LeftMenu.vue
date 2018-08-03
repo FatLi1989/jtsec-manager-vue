@@ -8,7 +8,7 @@
 
     <zoom-in-hinge-out>
       <div class="menu left" v-if="leftMenu">
-        <i class="iconfont item" :class="item.img" v-for="item of list" :key="item.id"></i>
+        <i class="iconfont item" :class="item.img" v-for="item of this.menuInfo" :key="item.id"></i>
       </div>
     </zoom-in-hinge-out>
   </div>
@@ -47,7 +47,7 @@
   .v-enter, .v-leave-to
     opacity: 0
   .v-enter-active, .v-leave-active
-    transition: opacity 0.1s
+    transition: opacity 1s
   .left
     width 50px !important
   .menu
@@ -67,6 +67,7 @@
     line-height 50px
     padding-left 15px
     background transparent
+    border-left #2aabd2
     color #fff
     font-size 900
     &:hover

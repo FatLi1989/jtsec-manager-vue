@@ -5,6 +5,7 @@ import Info from '../view/content/Info.vue'
 import Try from '../view/content/Try.vue'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -16,7 +17,7 @@ const router = new VueRouter({
       path: '/index',
       component: Index,
       children: [{
-        path: '/home',
+        path: '/menu',
         component: Home
       }, {
         path: '/info',
@@ -24,8 +25,7 @@ const router = new VueRouter({
       }, {
         path: '/try',
         component: Try
-      }
-      ]
+      }]
     }
   ]
 });

@@ -17,20 +17,21 @@
       IndexFooter, IndexHeader, IndexBody
     },
     computed: {
-      ...mapState({userInfo: 'userInfo'})
+      ...mapState(['userInfo', 'menuInfo'])
     },
     methods: {
       ...mapMutations(['setMenuInfo'])
     },
     created: function () {
-      this.$ajax.post('index', {
-        loginName: this.userInfo[0],
-        password: this.userInfo[1]
-      }).then((res) => {
-        if (res.data != null && res.data.code === 0) {
-           this.setMenuInfo(res.data.data.menuVo)
-        }
-      })
+        this.$ajax.post('index', {
+          loginName: this.userInfo[0],
+          password: this.userInfo[1]
+        }).then((res) => {
+          if (res.data != null && res.data.code === 0) {
+            this.setMenuInfo(res.data.data.menuVo)
+            console.log(res.data.data.menuVo)
+          }
+        })
     }
   }
 </script>

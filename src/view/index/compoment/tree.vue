@@ -7,7 +7,7 @@
         <i v-if="(item.expanded === false ? true : false)" class="iconfont icon-zuojiantou"></i>
         <i v-else-if="(item.expanded === false ? false : true)" class="iconfont icon-f11-copy1-copy"></i>
       </div>
-      <div class="item" v-if="(item.children.length === 0 ? true : false)">
+      <div class="item item-link" v-if="(item.children.length === 0 ? true : false)">
         <router-link :to="item.url" class="link">
           <i class="iconfont" :class="item.img"></i>
           <span v-if="!leftMenu">{{item.name}}</span>
@@ -37,7 +37,6 @@
         methods: {
           click: function (item) {
             item.expanded = !item.expanded
-            console.log(this.menu)
           }
         },
         computed: {
@@ -67,5 +66,5 @@
     float right
     margin-right 8px
  .child
-   background: #00000030!important
+   background: rgba(0,0,0,0.5)!important
 </style>

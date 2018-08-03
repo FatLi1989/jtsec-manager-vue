@@ -8,7 +8,7 @@ export default new Vuex.Store({
     leftMenu: true,
     rightMenu: false,
     userInfo: '',
-    menuInfo: JSON
+    menuInfo: Array
   },
   mutations: {
     leftMenuState (state, leftMenu) {
