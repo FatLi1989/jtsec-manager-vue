@@ -29,7 +29,6 @@
         }).then((res) => {
           if (res.data != null && res.data.code === 0) {
             this.setMenuInfo(res.data.data.menuVo)
-            console.log(res.data.data.menuVo)
           }
         })
     }

@@ -57,6 +57,8 @@
    background transparent
    color #fff
    font-size 900
+   span
+     margin-left 10px
    &:hover
      background #ffffff7a
   .link

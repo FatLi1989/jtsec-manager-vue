@@ -5,10 +5,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    leftMenu: true,
+    leftMenu: false,
     rightMenu: false,
     userInfo: '',
-    menuInfo: Array
+    menuInfo: []
   },
   mutations: {
     leftMenuState (state, leftMenu) {

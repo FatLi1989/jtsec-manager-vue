@@ -38,7 +38,7 @@
   .index-body-content
     flex 1
     margin-left 200px
-    background white
+    background whitesmoke
     color black
     transition : margin-left 1s, margin-right 1s
 </style>

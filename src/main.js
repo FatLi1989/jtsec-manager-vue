@@ -5,6 +5,8 @@ import App from './App';
 import './assets/css/common.css';
 import './assets/js/bootstrap.js';
 import routers from './router/router.js'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 /* vuex */
 import store from './store'
 /* 引入ajax框架axios配置 */
@@ -12,7 +14,7 @@ import axios from './axios'
 
 /*   设置 Vue.config.productionTip = false 来关闭生产模式下给出的提示 */
 Vue.config.productionTip = false;
-
+Vue.use(ElementUI);
 /* 将axios挂载到Vue原型上方便调用 */
  Vue.prototype.$ajax = axios;
 
