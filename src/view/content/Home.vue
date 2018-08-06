@@ -23,18 +23,16 @@
           <dd>操作</dd>
         </dl>
       </div>
-      <div class="tree-menu-main-tree">
-        <el-tree
-          class="filter-tree"
-          :data="menuInfo"
-          node-key="id"
-          :render-content="renderContent"
-          accordion
-          :filter-node-method="filterNode"
-          ref="tree"
-          @node-click="handleNodeClick">
-        </el-tree>
-      </div>
+      <el-tree
+        class="filter-tree"
+        :data="menuInfo"
+        node-key="id"
+        :render-content="renderContent"
+        accordion
+        :filter-node-method="filterNode"
+        ref="tree"
+        @node-click="handleNodeClick">
+      </el-tree>
     </div>
   </div>
 </template>
@@ -62,36 +60,48 @@
           return data.name.indexOf(value) !== -1;
         },
         renderContent: function (createElement, { node, data, store }) {
-           return (createElement('dl', {style: {'display': 'flex'}}, [
-             /* 图标菜单名称 */
-             createElement('dd', [
-               createElement('i', {
-                 class: ['iconfont', data.img]
-               }),
-               createElement('span', [data.name])
-             ], {
-               style: [{flex: 'auto', display: 'flex', width: '100px', 'text-align': 'center'}]
-             }),
+           return (createElement('dl', {class: ['menu-dl']}, [
+             /* 图标 */
+             createElement('i', {class: ['iconfont menu-i', data.img]}),
+             /* 菜单名称 */
+             createElement('dd', {class: ['menu-dd'], style: {'margin-left': '5px !important', width: 'auto'}}, [data.name]),
              /* 菜单序号 */
-             createElement('dd', {
-               style: [{flex: 'auto', width: '100px', 'text-align': 'center'}]
-             }, [data.orderNum]),
+             createElement('dd', {class: ['menu-dd'], style: {'margin-left': '60px'}}, [data.orderNum]),
              /* 菜单路径 */
-             createElement('dd', {
-               style: [{flex: 'auto', width: '100px', 'text-align': 'center'}]
-             }, [data.url]),
-             /* 菜单类型 */
-             createElement('dd', {
-               style: [{flex: 'auto', width: '100px', 'text-align': 'center'}]
-             }, [data.menuType]),
+             createElement('dd', {class: ['menu-dd'], style: {'margin-left': '55px'}}, [data.url]),
+             /* 菜单类型   data.menuType */
+             createElement('dd', {style: {'margin-left': '90px', 'margin-top': '25px'}}, [
+               createElement('el-row', [
+                 createElement('el-button',
+                   {attrs: {'type': 'primary', 'round': 'round', 'size': 'mini'}}, [
+                     data.menuType === 'M' ? '目录' : '', data.menuType === 'C' ? '菜单' : '', data.menuType === 'F' ? '按钮' : ''
+                   ])
+               ])
+             ]),
              /*  菜单是否可见 */
-             createElement('dd', {
-               style: [{flex: 'auto', width: '100px', 'text-align': 'center'}]
-             }, [data.visible]),
+             createElement('dd', {style: {'margin-left': '90px', 'margin-top': '25px'}}, [
+               createElement('el-row', [
+                 createElement('el-button',
+                   {attrs: {'type': 'success', 'round': 'round', 'size': 'mini'}}, [
+                      data.visible === 0 ? '显示' : '隐藏'
+                 ])
+             ])
+             ]),
              /*  菜单权限 */
-             createElement('dd', {
-               style: [{flex: 'auto', width: '100px', 'text-align': 'center'}]
-             }, [data.perms])
+             createElement('dd', {class: ['menu-dd'], style: {'margin-left': '55px', width: '50px'}}, [data.perms]),
+             /*  菜单操作 */
+             createElement('dd', {style: {'margin-left': '90px', 'margin-top': '25px'}}, [
+               createElement('div', {style: {'width': '100px'}}, [
+                 createElement('el-row', [
+                   createElement('el-button', {attrs: {'type': 'primary', 'icon': 'el-icon-edit', 'circle': 'circle', 'size': 'mini'}, style: {'margin-left': '10px'}}, [
+                   ]),
+                   createElement('el-button', {attrs: {'type': 'warning', 'icon': 'el-icon-plus', 'circle': 'circle', 'size': 'mini'}, style: {'margin-left': '5px'}}, [
+                   ]),
+                   createElement('el-button', {attrs: {'type': 'danger', 'icon': 'el-icon-delete', 'circle': 'circle', 'size': 'mini'}, style: {'margin-left': '5px'}}, [
+                   ])
+                 ])
+               ])
+             ])
            ]))
         }
       },
@@ -106,7 +116,20 @@
 <style lang="stylus" scoped>
 .tree-menu >>> .el-tree-node__content
  height 35px !important
+ padding-left 0px !important
  box-shadow: 0px 0px 1px rgba(0,0,0,.2) !important
+.tree-menu >>> .filter-tree
+ position relative !important
+.tree-menu >>> .menu-dl
+  display flex
+.tree-menu >>> .menu-i
+  margin-top: 30px
+.tree-menu >>> .menu-dd
+  text-align: center
+  margin-top: 30px
+  width 100px
+  margin-bottom: 10px
+  flex: auto
 .tree-menu
   display flex
   flex-direction column
@@ -136,13 +159,10 @@
     dl
      display flex
      dd
-       width: 100px
+       width: 150px
        text-align: center
        margin-top: 10px
        margin-bottom: 10px
-       flex: auto
-    .tree-menu-main-tree
-     position relative
     .tree-menu-main-tree-node
      line-height 30px
 </style>
