@@ -16,9 +16,9 @@
 <style lang="stylus" scoped>
 .footer
   position fixed
-  background #000000bd
+  background whitesmoke
   height 4%
-  color white
+  color black
   width 100%
   bottom 0px
   .footer-font

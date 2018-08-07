@@ -1,6 +1,6 @@
 import Login from '../view/login/Login.vue'
 import Index from '../view/index/Index.vue'
-import Home from '../view/content/Home.vue'
+import Menu from '../view/content/Menu/Mune.vue'
 import Info from '../view/content/Info.vue'
 import Try from '../view/content/Try.vue'
 import VueRouter from 'vue-router'
@@ -18,7 +18,7 @@ const router = new VueRouter({
       component: Index,
       children: [{
         path: '/menu',
-        component: Home
+        component: Menu
       }, {
         path: '/info',
         component: Info

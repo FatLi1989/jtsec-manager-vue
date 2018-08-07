@@ -59,7 +59,7 @@
       top :0
       width : 100%
       height : 5
-      background: #000000bd
+      background: #2f4050
       z-index : 1
     .header-left
        width: 200px

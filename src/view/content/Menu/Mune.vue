@@ -10,7 +10,7 @@
     </div>
     <div class="tree-menu-main">
       <div class="tree-menu-main-button">
-        <el-button style="border: #2aabd2 solid 1px" icon="el-icon-plus" round>新增</el-button>
+        <el-button style="border: #2aabd2 solid 1px" icon="el-icon-plus" round @click="addMenu">新增</el-button>
       </div>
       <div class="tree-menu-main-header">
         <dl>
@@ -25,20 +25,23 @@
       </div>
       <el-tree
         class="filter-tree"
-        :data="menuInfo"
+        :data="this.menuInfo"
         node-key="id"
         :render-content="renderContent"
         accordion
         :filter-node-method="filterNode"
-        ref="tree"
-        @node-click="handleNodeClick">
+        ref="tree">
       </el-tree>
+    </div>
+    <div class="dialog" v-if="this.outerMenu">
+      <menu-dialog ></menu-dialog>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-    import {mapState} from 'vuex'
+    import {mapState, mapMutations} from 'vuex'
+    import MenuDialog from './MenuDialog'
     export default {
         data () {
             return {
@@ -46,14 +49,17 @@
               defaultProps: {
                 children: 'children',
                 label: 'name'
-              }
+              },
+              showMenu: false
             }
         },
       computed: {
-        ...mapState(['menuInfo'])
+        ...mapState(['menuInfo', 'outerMenu'])
       },
       methods: {
-        handleNodeClick (data) {
+        ...mapMutations(['showOuterMenu']),
+        addMenu () {
+          this.showOuterMenu(!this.outerMenu)
         },
         filterNode (value, data) {
           if (!value) return true;
@@ -90,7 +96,7 @@
              /*  菜单权限 */
              createElement('dd', {class: ['menu-dd'], style: {'margin-left': '55px', width: '50px'}}, [data.perms]),
              /*  菜单操作 */
-             createElement('dd', {style: {'margin-left': '90px', 'margin-top': '25px'}}, [
+             createElement('dd', {style: {'margin-left': '105px', 'margin-top': '25px'}}, [
                createElement('div', {style: {'width': '100px'}}, [
                  createElement('el-row', [
                    createElement('el-button', {attrs: {'type': 'primary', 'icon': 'el-icon-edit', 'circle': 'circle', 'size': 'mini'}, style: {'margin-left': '10px'}}, [
@@ -109,7 +115,8 @@
         filterText (val) {
           this.$refs.tree.filter(val);
         }
-      }
+      },
+      components: {MenuDialog}
     }
 </script>
 
@@ -135,6 +142,9 @@
   flex-direction column
   width 90%
   margin-left 20px
+  .dialog
+   box-shadow: 0px 0px 1px rgba(0,0,0,3)
+   border-radius 15px
   .tree-menu-header
    background #fff
    position relative

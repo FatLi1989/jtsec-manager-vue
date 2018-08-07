@@ -1,0 +1,107 @@
+<template>
+  <dia-log>
+    <el-form ref="form" :model="MenuVo" label-width="80px" size="mini" slot="outer">
+      <el-form-item label="上级菜单:">
+        <input class="input" v-model="nodeName" readonly="readonly" placeholder="主目录" @click="mainMenu"/>
+      </el-form-item>
+      <el-form-item  prop="id">
+        <input type="hidden" v-model="MenuVo.parentId" >
+      </el-form-item>
+      <el-form-item label="菜单类型:" prop="menuType">
+        <el-radio-group v-model="MenuVo.menuType">
+          <el-radio :label="1">目录</el-radio>
+          <el-radio :label="2">菜单</el-radio>
+          <el-radio :label="3">按钮</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="菜单名称:" prop="name">
+        <el-input v-model="MenuVo.name"></el-input>
+      </el-form-item>
+      <el-form-item label="请求地址:"  prop="url">
+        <el-input v-model="MenuVo.url"></el-input>
+      </el-form-item>
+      <el-form-item label="权限标识:"  prop="perms">
+        <el-input v-model="MenuVo.perms"></el-input>
+      </el-form-item>
+      <el-form-item label="显示排序:" prop="orderNum">
+        <el-input v-model="MenuVo.orderNum"></el-input>
+      </el-form-item>
+      <el-form-item label="图标:" prop="img">
+        <input v-model="MenuVo.img" class="input" readonly="readonly" placeholder="选择图标" @click="mainMenu"/>
+      </el-form-item>
+      <el-form-item label="菜单状态:"  prop="visible">
+          <el-radio v-model="MenuVo.visible" :label="1">显示</el-radio>
+          <el-radio v-model="MenuVo.visible" :label="2">隐藏</el-radio>
+      </el-form-item>
+      <div class="footer">
+        <el-button type="warning" size="small" round @click="submit">提交</el-button>
+        <el-button type="danger" size="small" round @click="closeOuter">关闭</el-button>
+      </div>
+    </el-form>
+    <tree :tree="this.menuInfo" slot="inner"></tree>
+  </dia-log>
+</template>
+<script type="text/ecmascript-6">
+  import DiaLog from '../../../common/dialog/Dialog'
+  import Tree from '../../../common/tree/Tree'
+  import { mapMutations, mapState } from 'vuex'
+  export default {
+    data () {
+      return {
+        MenuVo: {
+          id: '',
+          name: '',
+          url: '',
+          img: '',
+          parentId: this.nodeId,
+          orderNum: '',
+          menuType: '',
+          visible: '',
+          perms: ''
+        }
+      }
+    },
+    components: {DiaLog, Tree},
+    methods: {
+      ...mapMutations(['showInnerMenu', 'transmitNode', 'showOuterMenu']),
+      mainMenu: function () {
+        this.showInnerMenu(!this.innerMenu);
+      },
+      closeOuter: function () {
+        this.showOuterMenu(!this.outerMenu)
+      },
+      submit: function () {
+        this.$ajax.post('addMenu', this.MenuVo).then((res) => {
+        })
+      }
+    },
+    computed: {
+      ...mapState(['innerMenu', 'menuInfo', 'treeNode', 'outerMenu']),
+      nodeName () {
+        return this.treeNode === '' ? '' : this.treeNode.name
+      },
+      nodeId () {
+        return this.treeNode === '' ? '' : this.treeNode.id
+      }
+    },
+    created: function () {
+      this.transmitNode('')
+    }
+  }
+</script>
+
+<style lang="stylus" scoped>
+  .input
+    border #2aabd2 solid 1px
+    border-radius 10px
+    text-align center
+    font-family "Albertus MT"
+    width 150px
+    background #FFFFFF
+  .footer
+    position relative
+    margin-top 50px
+    bottom  0px
+    right 0px
+    text-align right
+</style>

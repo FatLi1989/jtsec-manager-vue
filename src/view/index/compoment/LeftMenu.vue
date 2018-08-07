@@ -59,7 +59,7 @@
     left: 0px
     width: 200px
     height: 100%
-    background: rgba(0, 0, 0, 0.71)
+    background: #2f4050
     transition : width 1s
    .item
     width 100%

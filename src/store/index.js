@@ -8,7 +8,10 @@ export default new Vuex.Store({
     leftMenu: false,
     rightMenu: false,
     userInfo: '',
-    menuInfo: []
+    menuInfo: [],
+    outerMenu: false,
+    innerMenu: false,
+    treeNode: []
   },
   mutations: {
     leftMenuState (state, leftMenu) {
@@ -22,6 +25,15 @@ export default new Vuex.Store({
     },
     setMenuInfo (state, menu) {
       state.menuInfo = menu
+    },
+    showOuterMenu (state, show) {
+      state.outerMenu = show
+    },
+    showInnerMenu (state, show) {
+      state.innerMenu = show
+    },
+    transmitNode (state, node) {
+      state.treeNode = node
     }
   }
 })

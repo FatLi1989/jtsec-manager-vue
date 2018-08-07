@@ -34,7 +34,7 @@
   width: 200px
   height: 100%
   right: 0px
-  color white
-  background: rgba(0, 0, 0, 0.71)
+  color black
+  background: #fff
   z-inde 1
 </style>
