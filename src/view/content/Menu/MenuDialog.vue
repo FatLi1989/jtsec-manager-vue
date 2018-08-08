@@ -4,8 +4,8 @@
       <el-form-item label="上级菜单:">
         <input class="input" v-model="nodeName" readonly="readonly" placeholder="主目录" @click="mainMenu"/>
       </el-form-item>
-      <el-form-item  prop="id">
-        <input type="hidden" v-model="MenuVo.parentId" >
+      <el-form-item v-show="false" prop="parentId">
+        <input  v-model="MenuVo.parentId">
       </el-form-item>
       <el-form-item label="菜单类型:" prop="menuType">
         <el-radio-group v-model="MenuVo.menuType">
@@ -17,21 +17,22 @@
       <el-form-item label="菜单名称:" prop="name">
         <el-input v-model="MenuVo.name"></el-input>
       </el-form-item>
-      <el-form-item label="请求地址:"  prop="url">
+      <el-form-item label="请求地址:" prop="url">
         <el-input v-model="MenuVo.url"></el-input>
       </el-form-item>
-      <el-form-item label="权限标识:"  prop="perms">
+      <el-form-item label="权限标识:" prop="perms">
         <el-input v-model="MenuVo.perms"></el-input>
       </el-form-item>
       <el-form-item label="显示排序:" prop="orderNum">
         <el-input v-model="MenuVo.orderNum"></el-input>
       </el-form-item>
       <el-form-item label="图标:" prop="img">
-        <input v-model="MenuVo.img" class="input" readonly="readonly" placeholder="选择图标" @click="mainMenu"/>
+        <input v-model="MenuVo.img" class="input" readonly="readonly" placeholder="选择图标" @click="showIcon"/>
+        <icon v-if="iconS" @transmit="iconStyle"></icon>
       </el-form-item>
-      <el-form-item label="菜单状态:"  prop="visible">
-          <el-radio v-model="MenuVo.visible" :label="1">显示</el-radio>
-          <el-radio v-model="MenuVo.visible" :label="2">隐藏</el-radio>
+      <el-form-item label="菜单状态:" prop="visible">
+        <el-radio v-model="MenuVo.visible" :label="1">显示</el-radio>
+        <el-radio v-model="MenuVo.visible" :label="2">隐藏</el-radio>
       </el-form-item>
       <div class="footer">
         <el-button type="warning" size="small" round @click="submit">提交</el-button>
@@ -43,8 +44,10 @@
 </template>
 <script type="text/ecmascript-6">
   import DiaLog from '../../../common/dialog/Dialog'
+  import Icon from '../../../common/icon/Icon'
   import Tree from '../../../common/tree/Tree'
   import { mapMutations, mapState } from 'vuex'
+
   export default {
     data () {
       return {
@@ -53,15 +56,16 @@
           name: '',
           url: '',
           img: '',
-          parentId: this.nodeId,
+          parentId: '',
           orderNum: '',
           menuType: '',
           visible: '',
           perms: ''
-        }
+        },
+        iconS: false
       }
     },
-    components: {DiaLog, Tree},
+    components: {DiaLog, Tree, Icon},
     methods: {
       ...mapMutations(['showInnerMenu', 'transmitNode', 'showOuterMenu']),
       mainMenu: function () {
@@ -71,8 +75,16 @@
         this.showOuterMenu(!this.outerMenu)
       },
       submit: function () {
-        this.$ajax.post('addMenu', this.MenuVo).then((res) => {
+        console.log(this.MenuVo)
+        this.$ajax.post('/menu/addMenu', this.MenuVo).then((res) => {
         })
+      },
+      showIcon: function () {
+        this.iconS = !this.iconS
+      },
+      iconStyle: function (style) {
+        this.MenuVo.img = style
+        this.iconS = !this.iconS
       }
     },
     computed: {
@@ -80,8 +92,13 @@
       nodeName () {
         return this.treeNode === '' ? '' : this.treeNode.name
       },
-      nodeId () {
-        return this.treeNode === '' ? '' : this.treeNode.id
+      pId () {
+        return (this.treeNode === '' || undefined) ? 0 : this.treeNode.id
+      }
+    },
+    watch: {
+      pId: function (val, oldVal) {
+        this.MenuVo.parentId = val
       }
     },
     created: function () {
@@ -96,7 +113,7 @@
     border-radius 10px
     text-align center
     font-family "Albertus MT"
-    width 150px
+    width 300px
     background #FFFFFF
   .footer
     position relative
