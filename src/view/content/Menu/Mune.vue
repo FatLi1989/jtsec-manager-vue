@@ -25,99 +25,184 @@
       </div>
       <el-tree
         class="filter-tree"
-        :data="this.menuInfo"
+        :data="this.Menus"
         node-key="id"
         :render-content="renderContent"
+        :expand-on-click-node="false"
         accordion
         :filter-node-method="filterNode"
         ref="tree">
       </el-tree>
     </div>
     <div class="dialog" v-if="this.outerMenu">
-      <menu-dialog ></menu-dialog>
+      <menu-dialog :node="tNode"></menu-dialog>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-    import {mapState, mapMutations} from 'vuex'
-    import MenuDialog from './MenuDialog'
-    export default {
-        data () {
-            return {
-              filterText: '',
-              defaultProps: {
-                children: 'children',
-                label: 'name'
-              },
-              showMenu: false
+  import {mapState, mapMutations} from 'vuex'
+  import MenuDialog from './MenuDialog'
+
+  export default {
+    data () {
+      return {
+        filterText: '',
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
+        showMenu: false,
+        tNode: {}
+      }
+    },
+    computed: {
+      ...mapState(['allMenus', 'outerMenu']),
+      Menus: function () {
+        return this.allMenus
+      }
+    },
+    methods: {
+      ...mapMutations(['showOuterMenu', 'AllMenus']),
+      addMenu () {
+        this.tNode = null;
+        this.showOuterMenu(!this.outerMenu)
+      },
+      filterNode (value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
+      renderContent: function (createElement, {node, data, store}) {
+        return (createElement('dl', {class: ['menu-dl']}, [
+          /* 图标 */
+          createElement('i', {class: ['iconfont menu-i', data.img]}),
+          /* 菜单名称 */
+          createElement('dd', {
+            class: ['menu-dd'],
+            style: {'margin-left': '5px !important', width: '55px', textAlign: 'left'}
+          }, [data.name]),
+          /* 菜单序号 */
+          createElement('dd', {class: ['menu-dd'], style: {'margin-left': '60px'}}, [data.orderNum]),
+          /* 菜单路径 */
+          createElement('dd', {class: ['menu-dd'], style: {'margin-left': '55px'}}, [data.url]),
+          /* 菜单类型   data.menuType */
+          createElement('dd', {style: {'margin-left': '75px', 'margin-top': '25px', width: '50px'}}, [
+            createElement('el-row', [
+              data.menuType === 'M' ? (createElement('el-button',
+                {attrs: {'type': 'primary', 'round': 'round', 'size': 'mini'}}, ['目录'])) : data.menuType === 'C' ? (createElement('el-button',
+                {attrs: {'type': 'warning', 'round': 'round', 'size': 'mini'}}, ['菜单'])) : data.menuType === 'F' ? (createElement('el-button',
+                {attrs: {'type': 'danger', 'round': 'round', 'size': 'mini'}}, ['按钮'])) : ''
+            ])
+          ]),
+          /*  菜单是否可见 */
+          createElement('dd', {style: {'margin-left': '100px', 'margin-top': '25px', width: '50px'}}, [
+            createElement('el-row', [
+              createElement('el-button',
+                {attrs: {'type': 'success', 'round': 'round', 'size': 'mini'}}, [
+                  data.visible === 0 ? '显示' : '隐藏'
+                ])
+            ])
+          ]),
+          /*  菜单权限 */
+          createElement('dd', {class: ['menu-dd'], style: {'margin-left': '80px', width: '50px'}}, [data.perms]),
+          /*  菜单操作 */
+          createElement('dd', {style: {'margin-left': '120px', 'margin-top': '25px'}}, [
+            createElement('div', {style: {'width': '100px'}}, [
+              createElement('el-row', [
+                createElement('el-button', {
+                  attrs: {
+                    'type': 'primary',
+                    'icon': 'el-icon-edit',
+                    'circle': 'circle',
+                    'size': 'mini'
+                  },
+                  style: {'margin-left': '10px'},
+                  on: {click: this.edit}
+                }, []),
+                createElement('el-button', {
+                  attrs: {
+                    'type': 'danger',
+                    'icon': 'el-icon-delete',
+                    'circle': 'circle',
+                    'size': 'mini'
+                  },
+                  style: {'margin-left': '5px'},
+                  on: {click: this.del}
+                }, [])
+              ])
+            ])
+          ])
+        ]))
+      },
+      del: function () {
+        let node = this.$refs.tree.getCurrentNode();
+        if (node === null) {
+          this.$message({
+            type: 'warning',
+            message: '没有选中菜单啊'
+          });
+          return;
+        }
+        if (node.children.length !== 0) {
+          this.$message({
+            type: 'warning',
+            message: '不能删,先删子菜单去吧'
+          });
+          return;
+        }
+        this.$confirm('此操作将永久删除' + node.name + '是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$ajax.get('/menu/del/' + node.id).then((res) => {
+            if (res.data.code === 100) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              location.reload()
+            } else {
+              this.$message({
+                type: 'success',
+                message: res.data.msg
+              });
             }
-        },
-      computed: {
-        ...mapState(['menuInfo', 'outerMenu'])
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
-      methods: {
-        ...mapMutations(['showOuterMenu']),
-        addMenu () {
-          this.showOuterMenu(!this.outerMenu)
-        },
-        filterNode (value, data) {
-          if (!value) return true;
-          return data.name.indexOf(value) !== -1;
-        },
-        renderContent: function (createElement, { node, data, store }) {
-           return (createElement('dl', {class: ['menu-dl']}, [
-             /* 图标 */
-             createElement('i', {class: ['iconfont menu-i', data.img]}),
-             /* 菜单名称 */
-             createElement('dd', {class: ['menu-dd'], style: {'margin-left': '5px !important', width: 'auto'}}, [data.name]),
-             /* 菜单序号 */
-             createElement('dd', {class: ['menu-dd'], style: {'margin-left': '60px'}}, [data.orderNum]),
-             /* 菜单路径 */
-             createElement('dd', {class: ['menu-dd'], style: {'margin-left': '55px'}}, [data.url]),
-             /* 菜单类型   data.menuType */
-             createElement('dd', {style: {'margin-left': '90px', 'margin-top': '25px'}}, [
-               createElement('el-row', [
-                 createElement('el-button',
-                   {attrs: {'type': 'primary', 'round': 'round', 'size': 'mini'}}, [
-                     data.menuType === 'M' ? '目录' : '', data.menuType === 'C' ? '菜单' : '', data.menuType === 'F' ? '按钮' : ''
-                   ])
-               ])
-             ]),
-             /*  菜单是否可见 */
-             createElement('dd', {style: {'margin-left': '90px', 'margin-top': '25px'}}, [
-               createElement('el-row', [
-                 createElement('el-button',
-                   {attrs: {'type': 'success', 'round': 'round', 'size': 'mini'}}, [
-                      data.visible === 0 ? '显示' : '隐藏'
-                 ])
-             ])
-             ]),
-             /*  菜单权限 */
-             createElement('dd', {class: ['menu-dd'], style: {'margin-left': '55px', width: '50px'}}, [data.perms]),
-             /*  菜单操作 */
-             createElement('dd', {style: {'margin-left': '105px', 'margin-top': '25px'}}, [
-               createElement('div', {style: {'width': '100px'}}, [
-                 createElement('el-row', [
-                   createElement('el-button', {attrs: {'type': 'primary', 'icon': 'el-icon-edit', 'circle': 'circle', 'size': 'mini'}, style: {'margin-left': '10px'}}, [
-                   ]),
-                   createElement('el-button', {attrs: {'type': 'warning', 'icon': 'el-icon-plus', 'circle': 'circle', 'size': 'mini'}, style: {'margin-left': '5px'}}, [
-                   ]),
-                   createElement('el-button', {attrs: {'type': 'danger', 'icon': 'el-icon-delete', 'circle': 'circle', 'size': 'mini'}, style: {'margin-left': '5px'}}, [
-                   ])
-                 ])
-               ])
-             ])
-           ]))
+      edit: function () {
+        let node = this.$refs.tree.getCurrentNode();
+        if (node === null) {
+          this.$message({
+            type: 'warning',
+            message: '没有选中菜单啊'
+          });
+          return;
         }
-      },
-      watch: {
-        filterText (val) {
-          this.$refs.tree.filter(val);
+        this.tNode = node;
+        this.showOuterMenu(!this.outerMenu)
+      }
+    },
+    watch: {
+      filterText (val) {
+        this.$refs.tree.filter(val);
+      }
+    },
+    components: {MenuDialog},
+    created: function () {
+      this.$ajax.get('/menu/select/all').then((res) => {
+        if (res.data != null && res.data.code === 100) {
+          this.AllMenus(res.data.data)
         }
-      },
-      components: {MenuDialog}
+      })
     }
+  }
 </script>
 
 <style lang="stylus" scoped>
@@ -131,6 +216,7 @@
   display flex
 .tree-menu >>> .menu-i
   margin-top: 30px
+  width 20px
 .tree-menu >>> .menu-dd
   text-align: center
   margin-top: 30px

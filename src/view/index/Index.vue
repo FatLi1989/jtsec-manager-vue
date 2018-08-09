@@ -27,7 +27,7 @@
           loginName: this.userInfo[0],
           password: this.userInfo[1]
         }).then((res) => {
-          if (res.data != null && res.data.code === 0) {
+          if (res.data != null && res.data.code === 100) {
             this.setMenuInfo(res.data.data.menuVo)
           }
         })

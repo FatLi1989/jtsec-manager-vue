@@ -31,15 +31,15 @@
         <icon v-if="iconS" @transmit="iconStyle"></icon>
       </el-form-item>
       <el-form-item label="菜单状态:" prop="visible">
-        <el-radio v-model="MenuVo.visible" :label="1">显示</el-radio>
-        <el-radio v-model="MenuVo.visible" :label="2">隐藏</el-radio>
+        <el-radio v-model="MenuVo.visible" :label="0">显示</el-radio>
+        <el-radio v-model="MenuVo.visible" :label="1">隐藏</el-radio>
       </el-form-item>
       <div class="footer">
         <el-button type="warning" size="small" round @click="submit">提交</el-button>
         <el-button type="danger" size="small" round @click="closeOuter">关闭</el-button>
       </div>
     </el-form>
-    <tree :tree="this.menuInfo" slot="inner"></tree>
+    <tree :tree="this.allMenus" slot="inner"></tree>
   </dia-log>
 </template>
 <script type="text/ecmascript-6">
@@ -49,6 +49,7 @@
   import { mapMutations, mapState } from 'vuex'
 
   export default {
+    props: ['node'],
     data () {
       return {
         MenuVo: {
@@ -75,20 +76,25 @@
         this.showOuterMenu(!this.outerMenu)
       },
       submit: function () {
-        console.log(this.MenuVo)
-        this.$ajax.post('/menu/addMenu', this.MenuVo).then((res) => {
+        this.$ajax.post('/menu/editMenu', this.MenuVo).then((res) => {
+          if (res.data.code === 100) {
+            this.showOuterMenu(!this.outerMenu);
+            location.reload();
+          }
         })
       },
       showIcon: function () {
         this.iconS = !this.iconS
       },
       iconStyle: function (style) {
-        this.MenuVo.img = style
+        this.MenuVo.img = style;
         this.iconS = !this.iconS
       }
     },
+    destroyed: function () {
+    },
     computed: {
-      ...mapState(['innerMenu', 'menuInfo', 'treeNode', 'outerMenu']),
+      ...mapState(['innerMenu', 'allMenus', 'treeNode', 'outerMenu']),
       nodeName () {
         return this.treeNode === '' ? '' : this.treeNode.name
       },
@@ -103,6 +109,24 @@
     },
     created: function () {
       this.transmitNode('')
+      if (this.node != null) {
+        this.MenuVo.id = this.node.id;
+        this.MenuVo.name = this.node.name;
+        this.MenuVo.url = this.node.url;
+        this.MenuVo.img = this.node.img;
+        this.MenuVo.perms = this.node.perms;
+        if (this.node.menuType === 'M') {
+          this.MenuVo.menuType = 1
+        }
+        if (this.node.menuType === 'C') {
+          this.MenuVo.menuType = 2
+        }
+        if (this.node.menuType === 'F') {
+          this.MenuVo.menuType = 3
+        }
+        this.MenuVo.visible = this.node.visible;
+        this.MenuVo.orderNum = this.node.orderNum;
+      }
     }
   }
 </script>

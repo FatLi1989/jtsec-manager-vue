@@ -9,7 +9,7 @@
         class="filter-tree"
         :data="tree"
         :props="defaultProps"
-        default-expand-all
+        :default-expand-all="false"
         node-key="id"
         :filter-node-method="filterNode"
         ref="trees">
