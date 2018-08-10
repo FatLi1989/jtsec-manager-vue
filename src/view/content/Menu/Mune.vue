@@ -226,7 +226,7 @@
 .tree-menu
   display flex
   flex-direction column
-  width 90%
+  width 97%
   margin-left 20px
   .dialog
    box-shadow: 0px 0px 1px rgba(0,0,0,3)
@@ -234,7 +234,7 @@
   .tree-menu-header
    background #fff
    position relative
-   margin-top 50px
+   margin-top 20px
    border-radius 15px
    box-shadow: 1px 1px 3px rgba(0,0,0,.2)
   .tree-menu-main
@@ -242,23 +242,37 @@
    flex-direction column
    background #fff
    position relative
-   min-height 450px
+   height 79vh
    overflow-x 0
    overflow-y auto
-   margin-top 50px
+   margin-top 20px
    border-radius 15px
    box-shadow: 1px 1px 3px rgba(0,0,0,.2)
+   &::-webkit-scrollbar
+    width: 5px
+    height: 10px
+   &::-webkit-scrollbar-track
+    margin-top 5px
+    margin-bottom 5px
+    box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset
+    border-radius: 10px;
+    background: rgba(0,0,0,0.1);
+   &::-webkit-scrollbar-thumb
+    border-radius 10px
+    height: 5px
+    background-clip: border-box
+    box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset
    .tree-menu-main-button
-    position relative
-    margin 20px 20px
+     position relative
+     margin 20px 20px
    .tree-menu-main-header
-    dl
-     display flex
-     dd
-       width: 150px
-       text-align: center
-       margin-top: 10px
-       margin-bottom: 10px
+      dl
+        display flex
+       dd
+         width: 150px
+         text-align: center
+         margin-top: 10px
+         margin-bottom: 10px
     .tree-menu-main-tree-node
-     line-height 30px
+      line-height 30px
 </style>

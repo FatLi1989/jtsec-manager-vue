@@ -1,7 +1,7 @@
 import Login from '../view/login/Login.vue'
 import Index from '../view/index/Index.vue'
 import Menu from '../view/content/Menu/Mune.vue'
-import Info from '../view/content/Info.vue'
+import User from '../view/content/user/User'
 import Try from '../view/content/Try.vue'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
@@ -20,8 +20,8 @@ const router = new VueRouter({
         path: '/menu',
         component: Menu
       }, {
-        path: '/info',
-        component: Info
+        path: '/user',
+        component: User
       }, {
         path: '/try',
         component: Try

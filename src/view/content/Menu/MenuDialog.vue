@@ -1,12 +1,14 @@
 <template>
   <dia-log>
     <el-form ref="form" :model="MenuVo" label-width="80px" size="mini" slot="outer">
-      <el-form-item label="上级菜单:">
-        <input class="input" v-model="nodeName" readonly="readonly" placeholder="主目录" @click="mainMenu"/>
-      </el-form-item>
-      <el-form-item v-show="false" prop="parentId">
-        <input  v-model="MenuVo.parentId">
-      </el-form-item>
+      <div v-if="show">
+        <el-form-item label="上级菜单:">
+          <input class="input" v-model="nodeName" readonly="readonly" placeholder="主目录" @click="mainMenu"/>
+        </el-form-item>
+      </div>
+        <el-form-item v-show="false" prop="parentId">
+          <input v-model="MenuVo.parentId">
+        </el-form-item>
       <el-form-item label="菜单类型:" prop="menuType">
         <el-radio-group v-model="MenuVo.menuType">
           <el-radio :label="1">目录</el-radio>
@@ -63,7 +65,8 @@
           visible: '',
           perms: ''
         },
-        iconS: false
+        iconS: false,
+        show: true
       }
     },
     components: {DiaLog, Tree, Icon},
@@ -76,6 +79,7 @@
         this.showOuterMenu(!this.outerMenu)
       },
       submit: function () {
+        console.log(this.MenuVo.parentId)
         this.$ajax.post('/menu/editMenu', this.MenuVo).then((res) => {
           if (res.data.code === 100) {
             this.showOuterMenu(!this.outerMenu);
@@ -99,7 +103,9 @@
         return this.treeNode === '' ? '' : this.treeNode.name
       },
       pId () {
-        return (this.treeNode === '' || undefined) ? 0 : this.treeNode.id
+        if (this.node == null) {
+          return (this.treeNode === '' || undefined) ? 0 : this.treeNode.id
+        }
       }
     },
     watch: {
@@ -115,6 +121,8 @@
         this.MenuVo.url = this.node.url;
         this.MenuVo.img = this.node.img;
         this.MenuVo.perms = this.node.perms;
+        this.MenuVo.parentId = this.node.parentId;
+        console.log(this.MenuVo.parentId)
         if (this.node.menuType === 'M') {
           this.MenuVo.menuType = 1
         }
@@ -126,6 +134,7 @@
         }
         this.MenuVo.visible = this.node.visible;
         this.MenuVo.orderNum = this.node.orderNum;
+        this.show = false
       }
     }
   }
