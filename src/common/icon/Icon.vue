@@ -19,12 +19,14 @@
     data () {
       return {
         iconList: [
-          ['icon-xitongjiankongguanli', 'icon-xitongjiankong', 'icon-gongju', 'icon-kl-xtjk', 'icon-xitongguanli'],
-          ['icon-xitongjiankongguanli', 'icon-xitongjiankong', 'icon-gongju', 'icon-kl-xtjk', 'icon-xitongguanli'],
-          ['icon-zhuye', 'icon-tongzhi1', 'icon-icon-bars', 'icon-dengluyemianyonghuming', 'icon-guanbi'],
-          ['icon-zhuye', 'icon-tongzhi1', 'icon-icon-bars', 'icon-dengluyemianyonghuming', 'icon-guanbi'],
-          ['icon-zhuye', 'icon-tongzhi1', 'icon-icon-bars', 'icon-dengluyemianyonghuming', 'icon-guanbi'],
-          ['icon-zhuye', 'icon-tongzhi1', 'icon-icon-bars', 'icon-dengluyemianyonghuming', 'icon-guanbi']
+          ['icon-tianchongzhuye', 'icon-biji', 'icon-cheng', 'icon-dianhua', 'icon-shou'],
+          ['icon-diannao', 'icon-celianggongju', 'icon-lou', 'icon-xuexiao', 'icon-youxiang'],
+          ['icon-fangzi', 'icon-fangdajing', 'icon-jiangbei', 'icon-sikao', 'icon-dilixueyuan'],
+          ['icon-zidian', 'icon-dilixueboshi', 'icon-diqiuyi', 'icon-tubiaoku', 'icon-xiuli'],
+          ['icon-ren', 'icon-shu', 'icon-huaxueyongpin', 'icon-xinfeng', 'icon-shuzhuo'],
+          ['icon-jiayouzhan', 'icon-yonghu3', 'icon-yonghu2', 'icon-caidan', 'icon-yonghu1'],
+          [' icon-yonghuqun', 'icon-quanxianguanli', 'icon-caidanguanli', 'icon-yonghu', 'icon-f11-copy1-copy'],
+          ['icon-xitongjiankongguanli', 'icon-gongju', 'icon-kl-xtjk', 'icon-xitongguanli', 'icon-icon-bars']
         ]
       }
     },
@@ -52,9 +54,23 @@
   width 300px
   height 200px
   border-radius 5px
- dl
-  display flex
-  margin-top 5px
-  dd
-   flex auto
+  &::-webkit-scrollbar
+    width: 5px
+    height: 10px
+  &::-webkit-scrollbar-track
+    margin-top 5px
+    margin-bottom 5px
+    box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset
+    border-radius: 10px;
+    background: rgba(0,0,0,0.1);
+  &::-webkit-scrollbar-thumb
+    border-radius 10px
+    height: 5px
+    background-clip: border-box
+    box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset
+   dl
+    display flex
+    margin-top 5px
+    dd
+     flex auto
 </style>

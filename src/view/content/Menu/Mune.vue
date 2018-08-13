@@ -137,41 +137,44 @@
       del: function () {
         let node = this.$refs.tree.getCurrentNode();
         if (node === null) {
-          this.$message({
-            type: 'warning',
-            message: '没有选中菜单啊'
+          this.$notify({
+            title: '提示',
+            message: '没有选中菜单啊',
+            type: 'warning'
           });
           return;
         }
         if (node.children.length !== 0) {
-          this.$message({
-            type: 'warning',
-            message: '不能删,先删子菜单去吧'
+          this.$notify({
+            title: '提示',
+            message: '不能删,先删子菜单去吧',
+            type: 'warning'
           });
           return;
         }
-        this.$confirm('此操作将永久删除' + node.name + '是否继续?', '提示', {
+        this.$confirm('此操作将永久删除  ' + node.name + '  是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.$ajax.get('/menu/del/' + node.id).then((res) => {
             if (res.data.code === 100) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
+              this.$notify({
+                title: '成功',
+                message: '删除成功!',
+                type: 'success'
               });
               location.reload()
             } else {
-              this.$message({
-                type: 'success',
+              this.$notify.error({
+                title: '错误',
                 message: res.data.msg
               });
             }
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
+          this.$notify.info({
+            title: '消息',
             message: '已取消删除'
           });
         });
@@ -179,9 +182,10 @@
       edit: function () {
         let node = this.$refs.tree.getCurrentNode();
         if (node === null) {
-          this.$message({
-            type: 'warning',
-            message: '没有选中菜单啊'
+          this.$notify({
+            title: '提示',
+            message: '没有选中菜单啊',
+            type: 'warning'
           });
           return;
         }

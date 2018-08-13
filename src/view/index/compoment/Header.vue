@@ -32,6 +32,7 @@
 
 <script type="text/ecmascript-6">
     import { mapMutations } from 'vuex'
+    import router from '../../../router/router.js'
     export default {
         name: 'IndexHeader',
         data () {
@@ -53,7 +54,9 @@
           },
           loginOut: function () {
             this.$ajax.get('loginOut').then((res) => {
-              console.log(res)
+              if (res.data.code === 100) {
+                router.push('/login')
+              }
             })
           }
         }
