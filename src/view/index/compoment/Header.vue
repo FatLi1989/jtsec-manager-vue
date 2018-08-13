@@ -12,7 +12,16 @@
       </div>
       <div class="header-right-info">
         <img class="header-img" src="../../../resource/img/header-Img.jpg"/>
-        <a class="user">{{user}}</a>
+        <el-dropdown class="user">
+          <a href="#" >
+            {{user}}
+          </a>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>
+              <a href="#" style="text-decoration:none" @click="loginOut"><i class="iconfont icon-dengluyemianyonghuming"></i>  退出</a>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
       <div class="header-right-menu">
         <a href="#" @click="rightMenuClickHandler" class="iconfont">&#xe606;</a>
@@ -41,6 +50,11 @@
           rightMenuClickHandler: function () {
             this.rightMenu = !this.rightMenu;
             this.rightMenuState(this.rightMenu)
+          },
+          loginOut: function () {
+            this.$ajax.get('loginOut').then((res) => {
+              console.log(res)
+            })
           }
         }
     }
