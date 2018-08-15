@@ -1,5 +1,5 @@
 <template>
-  <form-demo>
+  <form-demo @transmit="paging">
     <el-form :inline="true" class="el-form" size="mini" slot="header">
       <div class="condition-form">
         <el-form-item label="登录名称：">
@@ -21,25 +21,43 @@
     </el-form>
     <div slot="body">
       <el-table
-        :data="tableDataBegin"
+        :data="userData"
         style="width: 100%">
         <el-table-column
-          type="selection"
-          width="55">
+          prop="userId"
+          label="用户Id"
+          sortable
+          width="100">
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="日期"
-          width="180">
+          prop="loginName"
+          label="登录名称"
+          width="150">
         </el-table-column>
         <el-table-column
-          prop="name"
-          label="姓名"
-          width="180">
+          prop="userName"
+          label="用户名称"
+          width="150">
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="地址">
+          prop="phonenumber"
+          label="手机"
+          width="150">
+        </el-table-column>
+        <el-table-column
+          prop="status"
+          label="状态"
+          sortable
+          :formatter="stateFormatter"
+          width="150">
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="创建时间"
+          type="data"
+          :formatter="createTimeFormatter"
+          sortable
+          width="200">
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -61,143 +79,54 @@
 <script>
   import FormDemo from '../../../common/form/Form.vue'
   import Calendar from '../../../common/calendar/Calendar.vue'
+  import {mapState} from 'vuex'
+  import moment from 'moment'
 
   export default {
     data () {
       return {
-        tableDataBegin: [
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-          },
-          {
-            date: '2016-05-03',
-            name: '王二虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          },
-          {
-            date: '2016-05-04',
-            name: '王二虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-          },
-          {
-            date: '2016-05-05',
-            name: '王三虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-06',
-            name: '李彦鹏',
-            address: '上海市普陀区金沙江路 1517 弄'
-          },
-          {
-            date: '2016-05-07',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-          }
-        ],
-        tableDataName: '',
-        tableDataEnd: [],
-        currentPage: 4,
-        pageSize: 2,
-        totalItems: 0,
-        filterTableDataEnd: [],
-        flag: false
+        userData: [],
+        row: '',
+        page: ''
       };
     },
-    created () {
-      this.totalItems = this.tableDataBegin.length;
-      if (this.totalItems > this.pageSize) {
-        for (let index = 0; index < this.pageSize; index++) {
-          this.tableDataEnd.push(this.tableDataBegin[index]);
-        }
-      } else {
-        this.tableDataEnd = this.tableDataBegin;
-      }
-    },
     methods: {
-      /*    前端搜索功能需要区分是否检索,因为对应的字段的索引不同
-          用两个变量接收currentChangePage函数的参数 */
-      doFilter () {
-        if (this.tableDataName === '') {
-          this.$message.warning('查询条件不能为空！');
-          return;
-        }
-        this.tableDataEnd = []
-        /* 每次手动将数据置空,因为会出现多次点击搜索情况 */
-        this.filterTableDataEnd = []
-        this.tableDataBegin.forEach((value, index) => {
-          if (value.name) {
-            if (value.name.indexOf(this.tableDataName) >= 0) {
-              this.filterTableDataEnd.push(value)
-            }
+      selectUsers: function (row, page) {
+        this.$ajax.post('/user/select/all', [row, page]).then((res) => {
+          if (res.data.code === 100) {
+            console.log(res.data.data);
+            this.userData = res.data.data
           }
-        });
-        /* 页面数据改变重新统计数据数量和当前页 */
-        this.currentPage = 1
-        this.totalItems = this.filterTableDataEnd.length
-        /* 渲染表格,根据值 */
-        this.currentChangePage(this.filterTableDataEnd)
-        /* 页面初始化数据需要判断是否检索过 */
-        this.flag = true
+        })
       },
-      openData () {
+      paging: function (row, page) {
+        this.selectUsers(row, page);
       },
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`);
-        this.pageSize = val;
-        this.handleCurrentChange(this.currentPage);
+      stateFormatter (row) {
+        return row.status === 0 ? '正常' : row.status === 1 ? '禁用' : '删除'
       },
-      handleCurrentChange (val) {
-        console.log(`当前页: ${val}`);
-        this.currentPage = val;
-        /*  需要判断是否检索 */
-        if (!this.flag) {
-          this.currentChangePage(this.tableDataEnd)
-        } else {
-          this.currentChangePage(this.filterTableDataEnd)
+      createTimeFormatter (row) {
+        var date = row.createTime;
+        if (date === undefined) {
+          return '';
         }
-      }, /* 组件自带监控当前页码 */
-      currentChangePage (list) {
-        let from = (this.currentPage - 1) * this.pageSize;
-        let to = this.currentPage * this.pageSize;
-        this.tableDataEnd = [];
-        for (; from < to; from++) {
-          if (list[from]) {
-            this.tableDataEnd.push(list[from]);
-          }
-        }
+        return moment(date).format('YYYY-MM-DD HH:mm:ss');
       }
     },
-    components: { FormDemo, Calendar }
+    computed: {
+      ...mapState(['pages', 'rows'])
+    },
+    components: {FormDemo, Calendar},
+    created: function () {
+      this.selectUsers(this.pages, this.rows)
+    }
   };
 </script>
 <style lang="stylus" scoped>
-    .el-form
-     width 90%
-     height 100px !important
-     .condition-form
+  .el-form
+    width 90%
+    height 100px !important
+    .condition-form
       display flex
       flex-wrap wrap
       margin-top 10px

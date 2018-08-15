@@ -12,7 +12,9 @@ export default new Vuex.Store({
     outerMenu: false,
     innerMenu: false,
     treeNode: [],
-    allMenus: []
+    allMenus: [],
+    pages: '',
+    rows: ''
   },
   mutations: {
     leftMenuState (state, leftMenu) {
@@ -38,6 +40,12 @@ export default new Vuex.Store({
     },
     AllMenus (state, menu) {
       state.allMenus = menu
+    },
+    currentPage (state, page) {
+      state.page = page
+    },
+    currentSize (state, row) {
+      state.row = row
     }
   }
 })

@@ -11,23 +11,58 @@
         <slot name="body"></slot>
       </div>
       <div class="footer">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[1, 2, 3, 4]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="totalItems">
-        </el-pagination>
-      </div>
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPages"
+            :page-sizes="[10, 30, 50, 100]"
+            :page-size="currentSizes"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="100">
+          </el-pagination>
+        </div>
     </el-main>
   </el-container>
 </template>
 
 <script type="text/ecmascript-6">
+    import { mapMutations } from 'vuex'
+
     export default {
-      name: 'FormDemo'
+      name: 'FormDemo',
+      methods: {
+        ...mapMutations(['currentPage', 'currentSize']),
+        onSubmit: function () {
+
+        },
+        add: function () {
+
+        },
+        del: function () {
+
+        },
+        transmit: function (currentSize, currentPage) {
+          this.$emit('transmit', [currentSize, currentPage])
+        },
+        handleSizeChange (val) {
+          this.currentSize = val;
+          this.transmit(this.currentSizes, this.currentPages)
+        },
+        handleCurrentChange (val) {
+          this.currentPage = val;
+          this.transmit(this.currentSizes, this.currentPages)
+        }
+      },
+      data () {
+        return {
+          currentPages: 1,
+          currentSizes: 10
+        };
+      },
+      created: function () {
+        this.currentPage(this.currentPages);
+        this.currentSize(this.currentSizes)
+      }
     }
 </script>
 
