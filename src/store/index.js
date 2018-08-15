@@ -13,8 +13,8 @@ export default new Vuex.Store({
     innerMenu: false,
     treeNode: [],
     allMenus: [],
-    pages: '',
-    rows: ''
+    pages: 1,
+    rows: 10
   },
   mutations: {
     leftMenuState (state, leftMenu) {

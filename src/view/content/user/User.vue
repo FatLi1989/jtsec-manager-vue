@@ -1,5 +1,5 @@
 <template>
-  <form-demo @transmit="paging">
+  <form-demo @transmit="paging" :totalCount="totalCount">
     <el-form :inline="true" class="el-form" size="mini" slot="header">
       <div class="condition-form">
         <el-form-item label="登录名称：">
@@ -87,19 +87,23 @@
       return {
         userData: [],
         row: '',
-        page: ''
+        page: '',
+        totalCount: ''
       };
     },
     methods: {
       selectUsers: function (row, page) {
-        this.$ajax.post('/user/select/all', [row, page]).then((res) => {
+        console.log(row, page);
+        this.$ajax.post('/user/select/all', {row: row, page: page}).then((res) => {
           if (res.data.code === 100) {
-            console.log(res.data.data);
-            this.userData = res.data.data
+            console.log(res.data);
+            this.userData = res.data.pageInfo.list
+            this.totalCount = res.data.pageInfo.total
           }
         })
       },
       paging: function (row, page) {
+        console.log(row, page);
         this.selectUsers(row, page);
       },
       stateFormatter (row) {

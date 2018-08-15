@@ -18,7 +18,7 @@
             :page-sizes="[10, 30, 50, 100]"
             :page-size="currentSizes"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="100">
+            :total="totalCount">
           </el-pagination>
         </div>
     </el-main>
@@ -30,6 +30,7 @@
 
     export default {
       name: 'FormDemo',
+      props: ['totalCount'],
       methods: {
         ...mapMutations(['currentPage', 'currentSize']),
         onSubmit: function () {
@@ -45,11 +46,11 @@
           this.$emit('transmit', [currentSize, currentPage])
         },
         handleSizeChange (val) {
-          this.currentSize = val;
+          this.currentSizes = val;
           this.transmit(this.currentSizes, this.currentPages)
         },
         handleCurrentChange (val) {
-          this.currentPage = val;
+          this.currentPages = val;
           this.transmit(this.currentSizes, this.currentPages)
         }
       },
@@ -60,8 +61,6 @@
         };
       },
       created: function () {
-        this.currentPage(this.currentPages);
-        this.currentSize(this.currentSizes)
       }
     }
 </script>
