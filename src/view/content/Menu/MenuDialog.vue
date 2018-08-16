@@ -122,7 +122,6 @@
         this.MenuVo.img = this.node.img;
         this.MenuVo.perms = this.node.perms;
         this.MenuVo.parentId = this.node.parentId;
-        console.log(this.MenuVo.parentId)
         if (this.node.menuType === 'M') {
           this.MenuVo.menuType = 1
         }

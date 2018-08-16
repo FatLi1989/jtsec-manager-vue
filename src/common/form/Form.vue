@@ -1,8 +1,7 @@
 <template>
   <el-container>
-    <el-header v-if="true">
+    <el-header>
       <slot name="header"></slot>
-      <el-button type="primary" class="select-button" @click="onSubmit">查询</el-button>
     </el-header>
     <el-main>
       <el-button type="primary" class="add-btn" icon="el-icon-plus" @click="add">新增</el-button>
@@ -26,21 +25,19 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import { mapMutations } from 'vuex'
+    import { mapState, mapMutations } from 'vuex'
 
     export default {
       name: 'FormDemo',
       props: ['totalCount'],
       methods: {
-        ...mapMutations(['currentPage', 'currentSize']),
-        onSubmit: function () {
-
-        },
+        ...mapMutations(['currentPage', 'currentSize', 'showOuterMenu']),
         add: function () {
-
+          this.showOuterMenu(!this.outerMenu)
+          console.log(this.outerMenu)
         },
         del: function () {
-
+            alert('太麻烦了， 这个先做个预留吧')
         },
         transmit: function (currentSize, currentPage) {
           this.$emit('transmit', [currentSize, currentPage])
@@ -60,7 +57,8 @@
           currentSizes: 10
         };
       },
-      created: function () {
+      computed: {
+        ...mapState(['outerMenu'])
       }
     }
 </script>
@@ -75,12 +73,6 @@
     width 95%
     border-radius 15px
     box-shadow: 1px 1px 3px rgba(0,0,0,.2)
-    .select-button
-      text-align center
-      position relative
-      height 40px !important
-      bottom -58px !important
-      border-radius 100px
   .el-main
     background #fff
     margin-top 30px

@@ -72,7 +72,7 @@
             if (response.data != null && response.data.code === 100) {
               router.push('/index')
             } else {
-              this.message = response.data.meg
+              this.message = response.data.meg;
               this.showMessage = true
             }
           })

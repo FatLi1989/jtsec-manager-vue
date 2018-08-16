@@ -1,12 +1,11 @@
 <template>
   <zoom-in-to-out>
-    <el-dialog title="外层 Dialog"
+    <el-dialog
       :before-close="closeOuterByX"
       :visible.sync="outerVisible">
       <slot name="outer"></slot>
       <el-dialog
         width="40%"
-        title="内层 Dialog"
         :before-close="closeInnerByX"
         :visible.sync="innerVisible"
         append-to-body>
