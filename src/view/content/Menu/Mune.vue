@@ -25,7 +25,7 @@
       </div>
       <el-tree
         class="filter-tree"
-        :data="this.Menus"
+        :data="this.menus"
         node-key="id"
         :render-content="renderContent"
         :expand-on-click-node="false"
@@ -35,7 +35,7 @@
       </el-tree>
     </div>
     <div class="dialog" v-if="this.outerMenu">
-      <menu-dialog :node="tNode"></menu-dialog>
+      <menu-dialog :node="tNode" :menuInfo="menus"></menu-dialog>
     </div>
   </div>
 </template>
@@ -53,17 +53,15 @@
           label: 'name'
         },
         showMenu: false,
-        tNode: {}
+        tNode: {},
+        menus: []
       }
     },
     computed: {
-      ...mapState(['allMenus', 'outerMenu']),
-      Menus: function () {
-        return this.allMenus
-      }
+      ...mapState(['allMenus', 'outerMenu', 'reload'])
     },
     methods: {
-      ...mapMutations(['showOuterMenu', 'AllMenus']),
+      ...mapMutations(['showOuterMenu', 'reloadData']),
       addMenu () {
         this.tNode = null;
         this.showOuterMenu(!this.outerMenu)
@@ -164,7 +162,7 @@
                 message: '删除成功!',
                 type: 'success'
               });
-              location.reload()
+               this.reloadData(true)
             } else {
               this.$notify.error({
                 title: '错误',
@@ -191,20 +189,31 @@
         }
         this.tNode = node;
         this.showOuterMenu(!this.outerMenu)
+      },
+      selectMenu: function () {
+        this.$ajax.get('/menu/select/all').then((res) => {
+          if (res.data != null && res.data.code === 100) {
+            this.menus = res.data.data
+            this.reloadData(false)
+          }
+        })
       }
     },
     watch: {
       filterText (val) {
         this.$refs.tree.filter(val);
+      },
+      reload (val) {
+        console.log(1)
+        console.log(val);
+        if (val === true) {
+          this.selectMenu()
+        }
       }
     },
     components: {MenuDialog},
     created: function () {
-      this.$ajax.get('/menu/select/all').then((res) => {
-        if (res.data != null && res.data.code === 100) {
-          this.AllMenus(res.data.data)
-        }
-      })
+      this.selectMenu()
     }
   }
 </script>

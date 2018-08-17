@@ -12,9 +12,9 @@ export default new Vuex.Store({
     outerMenu: false,
     innerMenu: false,
     treeNode: [],
-    allMenus: [],
     pages: 1,
-    rows: 10
+    rows: 10,
+    reload: false
   },
   mutations: {
     leftMenuState (state, leftMenu) {
@@ -38,14 +38,14 @@ export default new Vuex.Store({
     transmitNode (state, node) {
       state.treeNode = node
     },
-    AllMenus (state, menu) {
-      state.allMenus = menu
-    },
     currentPage (state, page) {
       state.page = page
     },
     currentSize (state, row) {
       state.row = row
+    },
+    reloadData (state, reload) {
+      state.reload = reload
     }
   }
 })

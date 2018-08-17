@@ -34,7 +34,6 @@
         ...mapMutations(['currentPage', 'currentSize', 'showOuterMenu']),
         add: function () {
           this.showOuterMenu(!this.outerMenu)
-          console.log(this.outerMenu)
         },
         del: function () {
             alert('太麻烦了， 这个先做个预留吧')

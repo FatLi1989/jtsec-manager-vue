@@ -149,8 +149,8 @@
         this.UserVo.createTimeEnd = time[1]
       },
       clear: function () {
-        this.UserVo.status = ''
-        this.UserVo.phonenumber = ''
+        this.UserVo.status = '';
+        this.UserVo.phonenumber = '';
         this.UserVo.loginName = ''
       }
     },

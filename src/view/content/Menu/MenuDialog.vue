@@ -41,7 +41,7 @@
         <el-button type="danger" size="small" round @click="closeOuter">关闭</el-button>
       </div>
     </el-form>
-    <tree :tree="this.allMenus" slot="inner"></tree>
+    <tree :tree="menuInfo" slot="inner"></tree>
   </dia-log>
 </template>
 <script type="text/ecmascript-6">
@@ -51,7 +51,7 @@
   import { mapMutations, mapState } from 'vuex'
 
   export default {
-    props: ['node'],
+    props: ['node', 'menuInfo'],
     data () {
       return {
         MenuVo: {
@@ -71,7 +71,7 @@
     },
     components: {DiaLog, Tree, Icon},
     methods: {
-      ...mapMutations(['showInnerMenu', 'transmitNode', 'showOuterMenu']),
+      ...mapMutations(['showInnerMenu', 'transmitNode', 'showOuterMenu', 'reloadData']),
       mainMenu: function () {
         this.showInnerMenu(!this.innerMenu);
       },
@@ -79,11 +79,15 @@
         this.showOuterMenu(!this.outerMenu)
       },
       submit: function () {
-        console.log(this.MenuVo.parentId)
         this.$ajax.post('/menu/editMenu', this.MenuVo).then((res) => {
           if (res.data.code === 100) {
             this.showOuterMenu(!this.outerMenu);
-            location.reload();
+            this.reloadData(true)
+            this.$notify({
+              title: '提示',
+              message: '菜单变更成功',
+              type: 'success'
+            });
           }
         })
       },
@@ -98,7 +102,7 @@
     destroyed: function () {
     },
     computed: {
-      ...mapState(['innerMenu', 'allMenus', 'treeNode', 'outerMenu']),
+      ...mapState(['innerMenu', 'treeNode', 'outerMenu']),
       nodeName () {
         return this.treeNode === '' ? '' : this.treeNode.name
       },

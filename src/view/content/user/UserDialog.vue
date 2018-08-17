@@ -1,35 +1,44 @@
 <template>
   <dia-log>
-    <el-form ref="form" :model="MenuVo" label-width="80px" size="mini" slot="outer">
+    <el-form ref="form" :model="UserVo" label-width="80px" size="mini" slot="outer">
       <el-form-item v-show="false" prop="parentId">
-        <input v-model="MenuVo.parentId">
+        <input v-model="UserVo.userId">
       </el-form-item>
-      <el-form-item label="菜单类型:" prop="menuType">
-        <el-radio-group v-model="MenuVo.menuType">
-          <el-radio :label="1">目录</el-radio>
-          <el-radio :label="2">菜单</el-radio>
-          <el-radio :label="3">按钮</el-radio>
-        </el-radio-group>
+      <el-form-item label="登录名称:" prop="menuType">
+        <el-input v-model="UserVo.loginName"></el-input>
       </el-form-item>
-      <el-form-item label="菜单名称:" prop="name">
-        <el-input v-model="MenuVo.name"></el-input>
+      <el-form-item label="用户名称:" prop="name">
+        <el-input v-model="UserVo.userName"></el-input>
       </el-form-item>
-      <el-form-item label="请求地址:" prop="url">
-        <el-input v-model="MenuVo.url"></el-input>
+      <el-form-item label="密码:"  prop="url">
+        <el-input type="password" v-model="UserVo.password"></el-input>
       </el-form-item>
-      <el-form-item label="权限标识:" prop="perms">
-        <el-input v-model="MenuVo.perms"></el-input>
+      <el-form-item label="邮箱:" prop="perms">
+        <el-input v-model="UserVo.email"></el-input>
       </el-form-item>
-      <el-form-item label="显示排序:" prop="orderNum">
-        <el-input v-model="MenuVo.orderNum"></el-input>
+      <el-form-item label="手机:" prop="orderNum">
+        <el-input v-model="UserVo.phonenumber"></el-input>
       </el-form-item>
-      <el-form-item label="图标:" prop="img">
-        <input v-model="MenuVo.img" class="input" readonly="readonly" placeholder="选择图标" @click="showIcon"/>
-        <icon v-if="iconS" @transmit="iconStyle"></icon>
+      <el-form-item label="性别:" prop="img">
+        <el-select v-model="UserVo.sex" placeholder="请选择">
+          <el-option label="男" value="0"></el-option>
+          <el-option label="女" value="1"></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="菜单状态:" prop="visible">
-        <el-radio v-model="MenuVo.visible" :label="0">显示</el-radio>
-        <el-radio v-model="MenuVo.visible" :label="1">隐藏</el-radio>
+      <el-form-item label="状态:" prop="visible">
+        <el-switch
+          v-model="UserVo.status"
+          active-text="正常"
+          active-value="0"
+          active-color="#409EFF"
+          inactive-value="1"
+          inactive-text="禁用">
+        </el-switch>
+      </el-form-item>
+      <el-form-item label="角色:" prop="visible">
+        <el-checkbox-group v-model="UserVo.roles">
+          <el-checkbox v-for="role in this.RoleVo" :label="role.roleId" :key="role.roleId">{{role.roleName}}</el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
       <div class="footer">
         <el-button type="warning" size="small" round @click="submit">提交</el-button>
@@ -40,27 +49,58 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import { mapMutations, mapState } from 'vuex'
   import DiaLog from '../../../common/dialog/Dialog'
     export default {
         data () {
             return {
-              MenuVo: {
-                id: '',
-                name: '',
-                url: '',
-                img: '',
-                parentId: '',
-                orderNum: '',
-                menuType: '',
-                visible: '',
-                perms: ''
+              UserVo: {
+                userId: '',
+                status: '',
+                phonenumber: '',
+                loginName: '',
+                userName: '',
+                email: '',
+                sex: '',
+                roles: [],
+                roleIdList: []
               },
-              iconS: false,
+              RoleVo: [],
               show: true
             }
         },
       components: {
         DiaLog
+      },
+      methods: {
+        ...mapMutations(['showOuterMenu', 'reloadData']),
+        closeOuter: function () {
+          this.showOuterMenu(!this.outerMenu)
+        },
+        submit: function () {
+          console.log(this.UserVo);
+          this.$ajax.post('', this.UserVo).then((res) => {
+            if (res.data.code === 100) {
+              this.showOuterMenu(!this.outerMenu);
+              this.reloadData(true)
+              this.$notify({
+                title: '提示',
+                message: '用户变更成功',
+                type: 'success'
+              });
+            }
+          })
+        }
+      },
+      computed: {
+        ...mapState(['outerMenu'])
+      },
+      created: function () {
+        this.$ajax.post('/role/select/all', this.RoleVo).then((res) => {
+          if (res.data.code === 100) {
+            this.RoleVo = res.data.data;
+          }
+        })
       }
     }
 </script>
