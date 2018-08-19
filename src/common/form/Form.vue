@@ -33,10 +33,11 @@
       methods: {
         ...mapMutations(['currentPage', 'currentSize', 'showOuterMenu']),
         add: function () {
-          this.showOuterMenu(!this.outerMenu)
+          this.showOuterMenu(!this.outerMenu);
+          this.$emit('show')
         },
         del: function () {
-            alert('太麻烦了， 这个先做个预留吧')
+            this.$emit('delete')
         },
         transmit: function (currentSize, currentPage) {
           this.$emit('transmit', [currentSize, currentPage])

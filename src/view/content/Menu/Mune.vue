@@ -204,8 +204,6 @@
         this.$refs.tree.filter(val);
       },
       reload (val) {
-        console.log(1)
-        console.log(val);
         if (val === true) {
           this.selectMenu()
         }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <zoom-in-hinge-out>
-      <div class="menu" v-if="!leftMenu">
+      <div class="menu" v-if="!leftMenu" >
         <child-tree :list="this.menuInfo"></child-tree>
       </div>
     </zoom-in-hinge-out>

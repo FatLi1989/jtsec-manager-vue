@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-demo @transmit="paging" :totalCount="totalCount">
+    <form-demo @transmit="paging" :totalCount="totalCount" @delete="del" @show="showForm">
       <el-form :inline="true" class="el-form" size="mini" slot="header">
         <div class="condition-form">
           <el-form-item label="登录名称：">
@@ -27,13 +27,12 @@
       </el-form>
       <div slot="body">
         <el-table
+          @select="select"
           :data="userData"
           style="width: 100%">
           <el-table-column
-            prop="userId"
-            label="用户Id"
-            sortable
-            width="100">
+            type="selection"
+            width="55">
           </el-table-column>
           <el-table-column
             prop="loginName"
@@ -72,30 +71,20 @@
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)">编辑
               </el-button>
-              <el-button
-                size="mini"
-                type="warning"
-                @click="handleDelete(scope.$index, scope.row)">重置
-              </el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除
-              </el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
     </form-demo>
     <div class="dialog" v-if="this.outerMenu">
-      <user-dialog></user-dialog>
+      <user-dialog :userInfo="this.userInfo" :showDialog="this.show"></user-dialog>
     </div>
   </div>
 </template>
 <script>
   import FormDemo from '../../../common/form/Form.vue'
   import Calendar from '../../../common/calendar/Calendar.vue'
-  import {mapState} from 'vuex'
+  import {mapState, mapMutations} from 'vuex'
   import moment from 'moment'
   import UserDialog from './UserDialog.vue'
 
@@ -106,6 +95,7 @@
         pageInfo: '',
         totalCount: 0,
         time: '',
+        show: '',
         UserVo: {
           status: '',
           phonenumber: '',
@@ -113,18 +103,22 @@
           createTimeBegin: '',
           createTimeEnd: '',
           row: '',
-          page: ''
-        }
+          page: '',
+          userIdList: []
+        },
+        userInfo: {}
       };
     },
     methods: {
+      ...mapMutations(['reloadData', 'showOuterMenu']),
       selectUsers: function () {
         this.$ajax.post('/user/select/all', this.UserVo).then((res) => {
           if (res.data.code === 100) {
             this.userData = res.data.pageInfo.list;
-            this.totalCount = res.data.pageInfo.total
+            this.totalCount = res.data.pageInfo.size
           }
         })
+        this.reloadData(false);
       },
       paging: function (pageInfo) {
         this.UserVo.row = pageInfo[0];
@@ -151,11 +145,74 @@
       clear: function () {
         this.UserVo.status = '';
         this.UserVo.phonenumber = '';
-        this.UserVo.loginName = ''
+        this.UserVo.loginName = '';
+        this.UserVo.createTimeBegin = '';
+        this.UserVo.createTimeEnd = ''
+      },
+      del: function () {
+        if (this.UserVo.userIdList.length === 0) {
+          this.$notify({
+            title: '提示',
+            message: '快去勾选数据',
+            type: 'error'
+          });
+          return;
+        }
+        this.$confirm('此操作将永久删除是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$ajax.post('/user/del', this.UserVo).then((res) => {
+            if (res.data.code === 100) {
+              this.$notify({
+                title: '成功',
+                message: res.data.meg,
+                type: 'success'
+              });
+              this.reloadData(true)
+            } else {
+              this.$notify.error({
+                title: '错误',
+                message: res.data.msg
+              });
+            }
+          })
+        }).catch(() => {
+          this.$notify.info({
+            title: '消息',
+            message: '已取消删除'
+          });
+        });
+      },
+      select: function (selection) {
+        this.UserVo.userIdList.length = 0;
+        selection.forEach((value, index, arr) => {
+          if (!this.UserVo.userIdList.includes(value.userId)) {
+            this.UserVo.userIdList.push(value.userId)
+          }
+        });
+      },
+      handleEdit: function (index, row) {
+        this.userInfo = row;
+        this.showOuterMenu(!this.outerMenu);
+      },
+      handleDelete: function (index, row) {
+        this.showOuterMenu(!this.outerMenu);
+      },
+      showForm: function () {
+        this.userInfo = null;
       }
     },
     computed: {
-      ...mapState(['pages', 'rows', 'outerMenu'])
+      ...mapState(['pages', 'rows', 'outerMenu', 'reload'])
+    },
+    watch: {
+      reload (val) {
+        if (val === true) {
+          this.selectUsers()
+        }
+      }
     },
     components: {FormDemo, Calendar, UserDialog},
     created: function () {
