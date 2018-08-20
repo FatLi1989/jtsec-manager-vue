@@ -22,6 +22,9 @@
       },
       methods: {
         change: function () {
+          if (this.time === null) {
+            this.time = ''
+          }
           this.$emit('transmitTime', this.time)
         }
       }

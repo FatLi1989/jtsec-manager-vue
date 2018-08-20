@@ -2,7 +2,7 @@
   <div>
     <div class="login-video">
       <video class="video" autoplay loop>
-        <source src="@/resource/video/Ipad.mp4" type="video/webm"/>
+        <source src="../../resource/video/Ipad.mp4" type="video/webm"/>
       </video>
     </div>
     <div class="row login-content ">

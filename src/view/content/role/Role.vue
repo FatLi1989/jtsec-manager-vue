@@ -3,14 +3,14 @@
     <form-demo @transmit="paging" :totalCount="totalCount" @delete="del" @show="showForm">
       <el-form :inline="true" class="el-form" size="mini" slot="header">
         <div class="condition-form">
-          <el-form-item label="登录名称：">
-            <el-input v-model="UserVo.loginName" placeholder="登录名称"></el-input>
+          <el-form-item label="角色名称：">
+            <el-input v-model="RoleVo.roleName" placeholder="角色名称"></el-input>
           </el-form-item>
-          <el-form-item label="手机号码：">
-            <el-input v-model="UserVo.phonenumber" placeholder="手机号码"></el-input>
+          <el-form-item label="权限字符：">
+            <el-input v-model="RoleVo.roleKey" placeholder="权限字符"></el-input>
           </el-form-item>
-          <el-form-item label="用户状态：">
-            <el-select v-model="UserVo.status">
+          <el-form-item label="角色状态：">
+            <el-select v-model="RoleVo.status">
               <el-option value="0" label="正常"></el-option>
               <el-option value="1" label="禁用"></el-option>
               <el-option value="2" label="删除"></el-option>
@@ -28,25 +28,25 @@
       <div slot="body">
         <el-table
           @select="select"
-          :data="userData"
+          :data="roleData"
           style="width: 100%">
           <el-table-column
             type="selection"
             width="55">
           </el-table-column>
           <el-table-column
-            prop="loginName"
-            label="登录名称"
+            prop="roleName"
+            label="角色名称"
             width="150">
           </el-table-column>
           <el-table-column
-            prop="userName"
-            label="用户名称"
+            prop="roleKey"
+            label="权限字符"
             width="150">
           </el-table-column>
           <el-table-column
-            prop="phonenumber"
-            label="手机"
+            prop="roleSort"
+            label="显示顺序"
             width="150">
           </el-table-column>
           <el-table-column
@@ -86,45 +86,46 @@
   import Calendar from '../../../common/calendar/Calendar.vue'
   import {mapState, mapMutations} from 'vuex'
   import moment from 'moment'
-  import UserDialog from './UserDialog.vue'
+  import UserDialog from './RoleDialog.vue'
 
   export default {
     data () {
       return {
-        userData: [],
+        roleData: [],
         pageInfo: '',
         totalCount: 0,
         time: '',
         show: '',
-        UserVo: {
-          userId: '',
+        RoleVo: {
+          roleId: '',
+          roleName: '',
+          createTime: '',
           status: '',
-          phonenumber: '',
-          loginName: '',
+          roleKey: '',
           createTimeBegin: '',
           createTimeEnd: '',
           row: '',
-          page: '',
-          userIdList: []
+          page: ''
         },
         userInfo: {}
       };
     },
     methods: {
       ...mapMutations(['reloadData', 'showOuterMenu']),
-      selectUsers: function () {
-        this.$ajax.post('/user/select/all', this.UserVo).then((res) => {
+      selectRoles: function () {
+        this.$ajax.post('/role/select/all', this.RoleVo).then((res) => {
           if (res.data.code === 100) {
-            this.userData = res.data.pageInfo.list;
+            console.log(res.data.pageInfo.list);
+            this.roleData = res.data.pageInfo.list;
             this.totalCount = res.data.pageInfo.total
           }
-        });
+        })
         this.reloadData(false);
       },
       paging: function (pageInfo) {
-        this.UserVo.row = pageInfo[0];
-        this.UserVo.page = pageInfo[1];
-        this.selectUsers();
+        this.RoleVo.row = pageInfo[0];
+        this.RoleVo.page = pageInfo[1];
+        this.selectRoles();
       },
       stateFormatter (row) {
         return row.status === 0 ? '正常' : row.status === 1 ? '禁用' : '删除'
@@ -137,18 +138,18 @@
         return moment(date).format('YYYY-MM-DD HH:mm:ss');
       },
       onSubmit: function () {
-        this.selectUsers()
+        this.selectRoles()
       },
       transmit: function (time) {
-        this.UserVo.createTimeBegin = time[0];
-        this.UserVo.createTimeEnd = time[1]
+        this.RoleVo.createTimeBegin = time[0];
+        this.RoleVo.createTimeEnd = time[1]
       },
       clear: function () {
-        this.UserVo.status = '';
-        this.UserVo.phonenumber = '';
-        this.UserVo.loginName = '';
-        this.UserVo.createTimeBegin = '';
-        this.UserVo.createTimeEnd = ''
+        this.RoleVo.status = '';
+        this.RoleVo.roleName = '';
+        this.RoleVo.roleKey = '';
+        this.RoleVo.createTimeBegin = '';
+        this.RoleVo.createTimeEnd = ''
       },
       del: function () {
         if (this.UserVo.userIdList.length === 0) {
@@ -164,7 +165,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$ajax.post('/user/del', this.UserVo).then((res) => {
+          this.$ajax.post('/user/del', this.RoleVo).then((res) => {
             if (res.data.code === 100) {
               this.$notify({
                 title: '成功',
@@ -195,12 +196,8 @@
         });
       },
       handleEdit: function (index, row) {
-        this.$ajax.get('/user/select/' + row.userId).then((res) => {
-          if (res.data.code === 100) {
-            this.userInfo = res.data.data;
-            this.showOuterMenu(!this.outerMenu);
-          }
-        });
+        this.userInfo = row;
+        this.showOuterMenu(!this.outerMenu);
       },
       handleDelete: function (index, row) {
         this.showOuterMenu(!this.outerMenu);
@@ -215,15 +212,15 @@
     watch: {
       reload (val) {
         if (val === true) {
-          this.selectUsers()
+          this.selectRoles()
         }
       }
     },
     components: {FormDemo, Calendar, UserDialog},
     created: function () {
-      this.UserVo.row = this.rows;
-      this.UserVo.page = this.pages;
-      this.selectUsers()
+      this.RoleVo.row = this.rows;
+      this.RoleVo.page = this.pages;
+      this.selectRoles()
     }
   };
 </script>

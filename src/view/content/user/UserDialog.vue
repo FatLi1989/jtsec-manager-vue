@@ -106,7 +106,6 @@
         if (this.userInfo != null) {
           this.UserVo.userId = this.userInfo.userId;
           this.UserVo.status = this.userInfo.status;
-          console.log(this.UserVo.status)
           this.UserVo.phonenumber = this.userInfo.phonenumber;
           this.UserVo.loginName = this.userInfo.loginName;
           this.UserVo.userName = this.userInfo.userName;

@@ -4,7 +4,7 @@ import router from '../router/router.js'
 
 let instance = axios.create({
   baseURL: 'http://localhost:9527/jtsec/',
-  timeout: 10000,
+  timeout: 50000,
   withCredentials: true /* 设置跨域 */
 });
 // 请求拦截器

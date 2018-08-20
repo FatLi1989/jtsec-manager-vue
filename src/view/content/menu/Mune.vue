@@ -193,7 +193,7 @@
       selectMenu: function () {
         this.$ajax.get('/menu/select/all').then((res) => {
           if (res.data != null && res.data.code === 100) {
-            this.menus = res.data.data
+            this.menus = res.data.data;
             this.reloadData(false)
           }
         })

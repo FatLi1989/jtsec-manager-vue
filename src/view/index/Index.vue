@@ -23,10 +23,7 @@
       ...mapMutations(['setMenuInfo'])
     },
     created: function () {
-        this.$ajax.post('index', {
-          loginName: this.userInfo[0],
-          password: this.userInfo[1]
-        }).then((res) => {
+        this.$ajax.get('index').then((res) => {
           if (res.data != null && res.data.code === 100) {
             this.setMenuInfo(res.data.data.menuVo)
           }

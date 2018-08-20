@@ -1,8 +1,8 @@
 import Login from '../view/login/Login.vue'
 import Index from '../view/index/Index.vue'
-import Menu from '../view/content/Menu/Mune.vue'
+import Menu from '../view/content/menu/Mune.vue'
 import User from '../view/content/user/User'
-import Try from '../view/content/Try.vue'
+import Role from '../view/content/role/Role'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 
@@ -23,8 +23,8 @@ const router = new VueRouter({
         path: '/user',
         component: User
       }, {
-        path: '/try',
-        component: Try
+        path: '/role',
+        component: Role
       }]
     }
   ]
