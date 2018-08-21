@@ -1,23 +1,23 @@
 <template>
   <dia-log>
-    <el-form ref="form" :model="UserVo" label-width="80px" size="mini" slot="outer">
-      <el-form-item v-show="false" prop="parentId">
+    <el-form ref="form" :model="RoleVo" label-width="80px" size="mini" slot="outer">
+      <el-form-item v-show="false">
         <label>
-          <input v-model="UserVo.userId">
+          <input v-model="RoleVo.roleId">
         </label>
       </el-form-item>
       <el-form-item label="角色名称:" prop="menuType">
-        <el-input v-model="UserVo.loginName"></el-input>
+        <el-input v-model="RoleVo.roleName"></el-input>
       </el-form-item>
       <el-form-item label="权限字符:" prop="name">
-        <el-input v-model="UserVo.userName"></el-input>
+        <el-input v-model="RoleVo.roleKey"></el-input>
       </el-form-item>
       <el-form-item label="显示顺序:" prop="url">
-        <el-input v-model="UserVo.userName"></el-input>
+        <el-input v-model="RoleVo.roleSort"></el-input>
       </el-form-item>
       <el-form-item label="状态:">
         <el-switch
-          v-model="UserVo.status"
+          v-model="RoleVo.status"
           active-text="正常"
           active-value="0"
           active-color="#409EFF"
@@ -26,10 +26,10 @@
         </el-switch>
       </el-form-item>
       <el-form-item label="备注:" prop="visible">
-        <el-input v-model="UserVo.userName"></el-input>
+        <el-input v-model="RoleVo.remark"></el-input>
       </el-form-item>
       <el-form-item label="菜单权限:" prop="visible">
-        <check-box-tree :tree="menus" class="tree"></check-box-tree>
+        <check-box-tree :tree="menus" :default="defaultChecked" class="tree" @transmit="transmitTree"></check-box-tree>
       </el-form-item>
       <div class="footer">
         <el-button type="warning" size="small" round @click="submit">提交</el-button>
@@ -44,24 +44,21 @@
   import DiaLog from '../../../common/dialog/Dialog'
   import CheckBoxTree from '../../../common/tree/CheckBoxTree.vue'
   export default {
-    props: ['showDialog', 'userInfo'],
+    props: ['showDialog', 'roleInfo'],
     data () {
       return {
-        UserVo: {
-          userId: '',
+        RoleVo: {
+          roleId: '',
           status: '',
-          phonenumber: '',
-          password: '',
-          loginName: '',
-          userName: '',
-          email: '',
-          sex: '',
-          roles: [],
-          roleIdList: []
+          roleKey: '',
+          remark: '',
+          roleName: '',
+          roleSort: '',
+          menuIdList: []
         },
-        RoleVo: [],
         show: false,
-        menus: []
+        menus: [],
+        defaultChecked: []
       }
     },
     components: {
@@ -73,7 +70,15 @@
         this.showOuterMenu(!this.outerMenu)
       },
       submit: function () {
-        this.$ajax.post('/user/edit', this.UserVo).then((res) => {
+          if (this.RoleVo.menuIdList.length === 0) {
+            this.$notify({
+              title: '提示',
+              message: '选菜单,点按钮',
+              type: 'warning'
+            });
+            return;
+          }
+          this.$ajax.post('/role/eidt', this.RoleVo).then((res) => {
           if (res.data.code === 100) {
             this.showOuterMenu(!this.outerMenu);
             this.reloadData(true);
@@ -84,6 +89,10 @@
             });
           }
         })
+      },
+      transmitTree: function (val) {
+        this.RoleVo.menuIdList.length = 0;
+        this.RoleVo.menuIdList = val;
       }
     },
     computed: {
@@ -95,25 +104,17 @@
           this.menus = res.data.data;
           this.reloadData(false)
         }
-      })
-      this.$ajax.post('/role/select/all', this.RoleVo).then((res) => {
-        if (res.data.code === 100) {
-          this.RoleVo = res.data.data;
-        }
       });
-      if (this.userInfo != null) {
-        this.UserVo.userId = this.userInfo.userId;
-        this.UserVo.status = this.userInfo.status;
-        console.log(this.UserVo.status)
-        this.UserVo.phonenumber = this.userInfo.phonenumber;
-        this.UserVo.loginName = this.userInfo.loginName;
-        this.UserVo.userName = this.userInfo.userName;
-        this.UserVo.email = this.userInfo.email
-        this.UserVo.password = this.userInfo.password;
-        this.UserVo.sex = this.userInfo.sex;
-        if (this.userInfo.roles != null) {
-          this.userInfo.roles.forEach((val) => {
-            this.UserVo.roleIdList.push(val.roleId)
+      if (this.roleInfo != null) {
+        this.RoleVo.roleId = this.roleInfo.roleId;
+        this.RoleVo.status = this.roleInfo.status;
+        this.RoleVo.roleKey = this.roleInfo.roleKey;
+        this.RoleVo.remark = this.roleInfo.remark;
+        this.RoleVo.roleName = this.roleInfo.roleName;
+        this.RoleVo.roleSort = this.roleInfo.roleSort;
+        if (this.roleInfo.menus != null) {
+          this.roleInfo.menus.forEach((val) => {
+            this.defaultChecked.push(val.menuId)
           })
         }
       }

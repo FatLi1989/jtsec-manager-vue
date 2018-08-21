@@ -7,6 +7,8 @@
         show-checkbox
         :props="defaultProps"
         :default-expand-all="false"
+        :default-checked-keys="this.default"
+        :check-strictly="true"
         ref="trees">
       </el-tree>
     </div>
@@ -19,7 +21,7 @@
 <script>
   import {mapState, mapMutations} from 'vuex'
   export default {
-    props: ['tree'],
+    props: ['tree', 'default'],
     data () {
       return {
         defaultProps: {
@@ -48,6 +50,7 @@
         nodes.forEach((val) => {
           this.nodeArray.push(val.id);
         });
+        this.$emit('transmit', this.nodeArray);
       }
     },
     watch: {

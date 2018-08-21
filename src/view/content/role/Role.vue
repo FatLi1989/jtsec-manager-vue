@@ -77,7 +77,7 @@
       </div>
     </form-demo>
     <div class="dialog" v-if="this.outerMenu">
-      <user-dialog :userInfo="this.userInfo" :showDialog="this.show"></user-dialog>
+      <role-dialog :roleInfo="this.roleInfo" :showDialog="this.show"></role-dialog >
     </div>
   </div>
 </template>
@@ -86,7 +86,7 @@
   import Calendar from '../../../common/calendar/Calendar.vue'
   import {mapState, mapMutations} from 'vuex'
   import moment from 'moment'
-  import UserDialog from './RoleDialog.vue'
+  import RoleDialog from './RoleDialog.vue'
 
   export default {
     data () {
@@ -105,9 +105,10 @@
           createTimeBegin: '',
           createTimeEnd: '',
           row: '',
-          page: ''
+          page: '',
+          roleIdList: []
         },
-        userInfo: {}
+        roleInfo: {}
       };
     },
     methods: {
@@ -115,7 +116,6 @@
       selectRoles: function () {
         this.$ajax.post('/role/select/all', this.RoleVo).then((res) => {
           if (res.data.code === 100) {
-            console.log(res.data.pageInfo.list);
             this.roleData = res.data.pageInfo.list;
             this.totalCount = res.data.pageInfo.total
           }
@@ -152,7 +152,7 @@
         this.RoleVo.createTimeEnd = ''
       },
       del: function () {
-        if (this.UserVo.userIdList.length === 0) {
+        if (this.RoleVo.roleIdList.length === 0) {
           this.$notify({
             title: '提示',
             message: '快去勾选数据',
@@ -165,7 +165,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$ajax.post('/user/del', this.RoleVo).then((res) => {
+          this.$ajax.post('/role/del', this.RoleVo).then((res) => {
             if (res.data.code === 100) {
               this.$notify({
                 title: '成功',
@@ -188,22 +188,26 @@
         });
       },
       select: function (selection) {
-        this.UserVo.userIdList.length = 0;
+        this.RoleVo.roleIdList.length = 0;
         selection.forEach((value, index, arr) => {
-          if (!this.UserVo.userIdList.includes(value.userId)) {
-            this.UserVo.userIdList.push(value.userId)
+          if (!this.RoleVo.roleIdList.includes(value.roleId)) {
+            this.RoleVo.roleIdList.push(value.roleId)
           }
         });
       },
       handleEdit: function (index, row) {
-        this.userInfo = row;
-        this.showOuterMenu(!this.outerMenu);
+        this.$ajax.get('/role/select/' + row.roleId).then((res) => {
+          if (res.data.code === 100) {
+            this.roleInfo = res.data.data;
+            this.showOuterMenu(!this.outerMenu);
+          }
+        });
       },
       handleDelete: function (index, row) {
         this.showOuterMenu(!this.outerMenu);
       },
       showForm: function () {
-        this.userInfo = null;
+        this.roleInfo = null;
       }
     },
     computed: {
@@ -216,7 +220,7 @@
         }
       }
     },
-    components: {FormDemo, Calendar, UserDialog},
+    components: {FormDemo, Calendar, RoleDialog},
     created: function () {
       this.RoleVo.row = this.rows;
       this.RoleVo.page = this.pages;

@@ -82,7 +82,7 @@
         this.$ajax.post('/menu/editMenu', this.MenuVo).then((res) => {
           if (res.data.code === 100) {
             this.showOuterMenu(!this.outerMenu);
-            this.reloadData(true)
+            this.reloadData(true);
             this.$notify({
               title: '提示',
               message: '菜单变更成功',
