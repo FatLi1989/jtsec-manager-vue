@@ -3,6 +3,7 @@ import Index from '../view/index/Index.vue'
 import Menu from '../view/content/menu/Mune.vue'
 import User from '../view/content/user/User'
 import Role from '../view/content/role/Role'
+import Quartz from '../view/content/quartz/Quartz'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 
@@ -25,6 +26,9 @@ const router = new VueRouter({
       }, {
         path: '/role',
         component: Role
+      }, {
+        path: '/quartz',
+        component: Quartz
       }]
     }
   ]

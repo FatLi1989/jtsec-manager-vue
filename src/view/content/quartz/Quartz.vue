@@ -3,21 +3,18 @@
     <form-demo @transmit="paging" :totalCount="totalCount" @delete="del" @show="showForm">
       <el-form :inline="true" class="el-form" size="mini" slot="header">
         <div class="condition-form">
-          <el-form-item label="角色名称：">
-            <el-input v-model="RoleVo.roleName" placeholder="角色名称"></el-input>
+          <el-form-item label="任务名称：">
+            <el-input v-model="RoleVo.roleName" placeholder="任务名称"></el-input>
           </el-form-item>
-          <el-form-item label="权限字符：">
-            <el-input v-model="RoleVo.roleKey" placeholder="权限字符"></el-input>
+          <el-form-item label="方法名称：">
+            <el-input v-model="RoleVo.roleKey" placeholder="方法名称"></el-input>
           </el-form-item>
-          <el-form-item label="角色状态：">
+          <el-form-item label="任务状态：">
             <el-select v-model="RoleVo.status">
               <el-option value="0" label="正常"></el-option>
               <el-option value="1" label="禁用"></el-option>
               <el-option value="2" label="删除"></el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="创建时间：">
-            <calendar @transmitTime="transmit"></calendar>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" class="select-button" @click="onSubmit">查询</el-button>
@@ -36,30 +33,41 @@
           </el-table-column>
           <el-table-column
             prop="roleName"
-            label="角色名称"
-            width="150">
+            label="任务名称"
+            width="100">
           </el-table-column>
           <el-table-column
             prop="roleKey"
-            label="权限字符"
-            width="150">
+            label="任务组名"
+            width="100">
           </el-table-column>
           <el-table-column
             prop="roleSort"
-            label="显示顺序"
+            label="方法名称"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="status"
+            label="方法参数"
+            sortable
+            :formatter="stateFormatter"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="执行表达式"
+            type="data"
+            :formatter="createTimeFormatter"
+            sortable
             width="150">
           </el-table-column>
           <el-table-column
             prop="status"
-            label="状态"
+            label="任务状态"
+            type="data"
+            :formatter="createTimeFormatter"
             sortable
-            :formatter="stateFormatter"
             width="150">
-            <template slot-scope="scope">
-              <el-tag
-                :type="scope.row.status === 0 ? 'success' : 'danger' "
-                disable-transitions>{{scope.row.status === 0 ? '正常' : scope.row.status === 1 ? '禁用' : '删除' }}</el-tag>
-            </template>
           </el-table-column>
           <el-table-column
             prop="createTime"
@@ -67,12 +75,22 @@
             type="data"
             :formatter="createTimeFormatter"
             sortable
-            width="200">
+            width="150">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button
                 type="primary"
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)">启动
+              </el-button>
+              <el-button
+                type="success"
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)">暂停
+              </el-button>
+              <el-button
+                type="warning"
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)">编辑
               </el-button>
@@ -91,7 +109,7 @@
   import Calendar from '../../../common/calendar/Calendar.vue'
   import {mapState, mapMutations} from 'vuex'
   import moment from 'moment'
-  import RoleDialog from './RoleDialog.vue'
+  import RoleDialog from './QuartzDialog.vue'
 
   export default {
     data () {
@@ -131,6 +149,9 @@
         this.RoleVo.row = pageInfo[0];
         this.RoleVo.page = pageInfo[1];
         this.selectRoles();
+      },
+      stateFormatter (row) {
+        return row.status === 0 ? '正常' : row.status === 1 ? '禁用' : '删除'
       },
       createTimeFormatter (row) {
         var date = row.createTime;

@@ -29,6 +29,7 @@
         <el-table
           @select="select"
           :data="userData"
+          :stripe="true"
           style="width: 100%">
           <el-table-column
             type="selection"
@@ -53,8 +54,12 @@
             prop="status"
             label="状态"
             sortable
-            :formatter="stateFormatter"
             width="150">
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.status === 0 ? 'success' : 'danger' "
+              disable-transitions>{{scope.row.status === 0 ? '正常' : scope.row.status === 1 ? '禁用' : '删除' }}</el-tag>
+          </template>
           </el-table-column>
           <el-table-column
             prop="createTime"
@@ -125,9 +130,6 @@
         this.UserVo.row = pageInfo[0];
         this.UserVo.page = pageInfo[1];
         this.selectUsers();
-      },
-      stateFormatter (row) {
-        return row.status === 0 ? '正常' : row.status === 1 ? '禁用' : '删除'
       },
       createTimeFormatter (row) {
         var date = row.createTime;
