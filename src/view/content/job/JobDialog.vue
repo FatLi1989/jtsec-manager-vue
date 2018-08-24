@@ -6,13 +6,19 @@
           <input v-model="RoleVo.roleId">
         </label>
       </el-form-item>
-      <el-form-item label="角色名称:" prop="menuType">
+      <el-form-item label="任务名称:" prop="menuType">
         <el-input v-model="RoleVo.roleName"></el-input>
       </el-form-item>
-      <el-form-item label="权限字符:" prop="name">
+      <el-form-item label="任务组名:" prop="name">
         <el-input v-model="RoleVo.roleKey"></el-input>
       </el-form-item>
-      <el-form-item label="显示顺序:" prop="url">
+      <el-form-item label="方法名称:" prop="url">
+        <el-input v-model="RoleVo.roleSort"></el-input>
+      </el-form-item>
+      <el-form-item label="方法参数:" prop="url">
+        <el-input v-model="RoleVo.roleSort"></el-input>
+      </el-form-item>
+      <el-form-item label="cron:" prop="url">
         <el-input v-model="RoleVo.roleSort"></el-input>
       </el-form-item>
       <el-form-item label="状态:">
@@ -27,9 +33,6 @@
       </el-form-item>
       <el-form-item label="备注:" prop="visible">
         <el-input v-model="RoleVo.remark"></el-input>
-      </el-form-item>
-      <el-form-item label="菜单权限:" prop="visible">
-        <check-box-tree :tree="menus" :default="defaultChecked" class="tree" @transmit="transmitTree"></check-box-tree>
       </el-form-item>
       <div class="footer">
         <el-button type="warning" size="small" round @click="submit">提交</el-button>

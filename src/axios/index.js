@@ -3,7 +3,7 @@ import Qs from 'qs'
 import router from '../router/router.js'
 
 let instance = axios.create({
-  baseURL: 'http://47.95.0.193:8010/jtsec/',
+  baseURL: 'http://localhost:9527/jtsec/',
   timeout: 50000,
   withCredentials: true /* 设置跨域 */
 });

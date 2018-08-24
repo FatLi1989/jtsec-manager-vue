@@ -53,7 +53,6 @@
             prop="status"
             label="状态"
             sortable
-            :formatter="stateFormatter"
             width="150">
             <template slot-scope="scope">
               <el-tag

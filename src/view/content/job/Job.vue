@@ -4,13 +4,13 @@
       <el-form :inline="true" class="el-form" size="mini" slot="header">
         <div class="condition-form">
           <el-form-item label="任务名称：">
-            <el-input v-model="RoleVo.roleName" placeholder="任务名称"></el-input>
+            <el-input v-model="JobVo.jobName" placeholder="任务名称"></el-input>
           </el-form-item>
           <el-form-item label="方法名称：">
-            <el-input v-model="RoleVo.roleKey" placeholder="方法名称"></el-input>
+            <el-input v-model="JobVo.methodName" placeholder="方法名称"></el-input>
           </el-form-item>
           <el-form-item label="任务状态：">
-            <el-select v-model="RoleVo.status">
+            <el-select v-model="JobVo.status">
               <el-option value="0" label="正常"></el-option>
               <el-option value="1" label="禁用"></el-option>
               <el-option value="2" label="删除"></el-option>
@@ -25,49 +25,48 @@
       <div slot="body">
         <el-table
           @select="select"
-          :data="roleData"
+          :data="jobData"
           style="width: 100%">
           <el-table-column
             type="selection"
             width="55">
           </el-table-column>
           <el-table-column
-            prop="roleName"
+            prop="jobName"
             label="任务名称"
             width="100">
           </el-table-column>
           <el-table-column
-            prop="roleKey"
+            prop="jobGroup"
             label="任务组名"
             width="100">
           </el-table-column>
           <el-table-column
-            prop="roleSort"
+            prop="methodName"
             label="方法名称"
             width="100">
           </el-table-column>
           <el-table-column
-            prop="status"
+            prop="params"
             label="方法参数"
-            sortable
-            :formatter="stateFormatter"
             width="100">
           </el-table-column>
           <el-table-column
-            prop="createTime"
+            prop="cronExpression"
             label="执行表达式"
-            type="data"
-            :formatter="createTimeFormatter"
             sortable
             width="150">
           </el-table-column>
           <el-table-column
             prop="status"
             label="任务状态"
-            type="data"
-            :formatter="createTimeFormatter"
             sortable
             width="150">
+            <template slot-scope="scope">
+              <el-tag
+                :type="scope.row.status === 0 ? 'success' : 'danger' "
+                disable-transitions>{{scope.row.status === 0 ? '正常' : scope.row.status === 1 ? '暂停' : '删除' }}</el-tag>
+            </template>
           </el-table-column>
           <el-table-column
             prop="createTime"
@@ -80,19 +79,20 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button
-                type="primary"
+                :type="scope.row.status === 0 ? 'warning' : 'primary'"
+                :icon="scope.row.status === 0 ? 'el-icon-time' : 'el-icon-caret-right'"
                 size="mini"
-                @click="handleEdit(scope.$index, scope.row)">启动
+                @click="handleEdit(scope.$index, scope.row)">{{scope.row.status === 0 ? '暂停' : '启用'}}
               </el-button>
               <el-button
                 type="success"
                 size="mini"
-                @click="handleEdit(scope.$index, scope.row)">暂停
+                @click="handleEdit(scope.$index, scope.row)"><i class="el-icon-caret-right">执行</i>
               </el-button>
               <el-button
-                type="warning"
+                type="danger"
                 size="mini"
-                @click="handleEdit(scope.$index, scope.row)">编辑
+                @click="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit">编辑</i>
               </el-button>
             </template>
           </el-table-column>
@@ -109,24 +109,21 @@
   import Calendar from '../../../common/calendar/Calendar.vue'
   import {mapState, mapMutations} from 'vuex'
   import moment from 'moment'
-  import RoleDialog from './QuartzDialog.vue'
+  import RoleDialog from './JobDialog.vue'
 
   export default {
     data () {
       return {
-        roleData: [],
+        jobData: [],
         pageInfo: '',
         totalCount: 0,
         time: '',
         show: '',
-        RoleVo: {
-          roleId: '',
-          roleName: '',
-          createTime: '',
+        JobVo: {
+          jobId: '',
+          jobName: '',
+          methodName: '',
           status: '',
-          roleKey: '',
-          createTimeBegin: '',
-          createTimeEnd: '',
           row: '',
           page: '',
           roleIdList: []
@@ -136,10 +133,10 @@
     },
     methods: {
       ...mapMutations(['reloadData', 'showOuterMenu']),
-      selectRoles: function () {
-        this.$ajax.post('/role/select/all', this.RoleVo).then((res) => {
+      selectJobs: function () {
+        this.$ajax.post('/job/select/all', this.JobVo).then((res) => {
           if (res.data.code === 100) {
-            this.roleData = res.data.pageInfo.list;
+            this.jobData = res.data.pageInfo.list;
             this.totalCount = res.data.pageInfo.total
           }
         })
@@ -148,7 +145,7 @@
       paging: function (pageInfo) {
         this.RoleVo.row = pageInfo[0];
         this.RoleVo.page = pageInfo[1];
-        this.selectRoles();
+        this.selectJobs();
       },
       stateFormatter (row) {
         return row.status === 0 ? '正常' : row.status === 1 ? '禁用' : '删除'
@@ -161,18 +158,16 @@
         return moment(date).format('YYYY-MM-DD HH:mm:ss');
       },
       onSubmit: function () {
-        this.selectRoles()
+        this.selectJobs()
       },
       transmit: function (time) {
         this.RoleVo.createTimeBegin = time[0];
         this.RoleVo.createTimeEnd = time[1]
       },
       clear: function () {
-        this.RoleVo.status = '';
-        this.RoleVo.roleName = '';
-        this.RoleVo.roleKey = '';
-        this.RoleVo.createTimeBegin = '';
-        this.RoleVo.createTimeEnd = ''
+        this.JobVo.jobName = '';
+        this.JobVo.methodName = '';
+        this.JobVo.status = '';
       },
       del: function () {
         if (this.RoleVo.roleIdList.length === 0) {
@@ -239,15 +234,15 @@
     watch: {
       reload (val) {
         if (val === true) {
-          this.selectRoles()
+          this.selectJobs()
         }
       }
     },
     components: {FormDemo, Calendar, RoleDialog},
     created: function () {
-      this.RoleVo.row = this.rows;
-      this.RoleVo.page = this.pages;
-      this.selectRoles()
+      this.JobVo.row = this.rows;
+      this.JobVo.page = this.pages;
+      this.selectJobs()
     }
   };
 </script>
@@ -263,4 +258,6 @@
       .select-button
         text-align center
         border-radius 100px
+  .el-button--mini
+    padding: 7px 6px
 </style>
