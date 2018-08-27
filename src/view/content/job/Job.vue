@@ -12,7 +12,7 @@
           <el-form-item label="任务状态：">
             <el-select v-model="JobVo.status">
               <el-option value="0" label="正常"></el-option>
-              <el-option value="1" label="禁用"></el-option>
+              <el-option value="1" label="暂停"></el-option>
               <el-option value="2" label="删除"></el-option>
             </el-select>
           </el-form-item>
@@ -148,7 +148,7 @@
         this.selectJobs();
       },
       stateFormatter (row) {
-        return row.status === 0 ? '正常' : row.status === 1 ? '禁用' : '删除'
+        return row.status === 0 ? '正常' : row.status === 1 ? '暂停' : '删除'
       },
       createTimeFormatter (row) {
         var date = row.createTime;
@@ -214,7 +214,14 @@
         });
       },
       handleEdit: function (index, row) {
-        this.$ajax.get('/role/select/' + row.roleId).then((res) => {
+        if (row.status === 0) {
+          row.status = 1
+        } else if (row.status === 1) {
+          row.status = 0
+        }
+        row.updateTime = null;
+        row.createTime = null;
+        this.$ajax.post('/job/changeStatus', row).then((res) => {
           if (res.data.code === 100) {
             this.roleInfo = res.data.data;
             this.showOuterMenu(!this.outerMenu);

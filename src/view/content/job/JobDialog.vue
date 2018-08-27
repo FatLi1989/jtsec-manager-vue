@@ -1,29 +1,29 @@
 <template>
   <dia-log>
-    <el-form ref="form" :model="RoleVo" label-width="80px" size="mini" slot="outer">
+    <el-form ref="form" :model="JobVo" label-width="80px" size="mini" slot="outer">
       <el-form-item v-show="false">
         <label>
-          <input v-model="RoleVo.roleId">
+          <input v-model="JobVo.jobId">
         </label>
       </el-form-item>
       <el-form-item label="任务名称:" prop="menuType">
-        <el-input v-model="RoleVo.roleName"></el-input>
+        <el-input v-model="JobVo.jobName"></el-input>
       </el-form-item>
       <el-form-item label="任务组名:" prop="name">
-        <el-input v-model="RoleVo.roleKey"></el-input>
+        <el-input v-model="JobVo.jobGroup"></el-input>
       </el-form-item>
       <el-form-item label="方法名称:" prop="url">
-        <el-input v-model="RoleVo.roleSort"></el-input>
+        <el-input v-model="JobVo.methodName"></el-input>
       </el-form-item>
       <el-form-item label="方法参数:" prop="url">
-        <el-input v-model="RoleVo.roleSort"></el-input>
+        <el-input v-model="JobVo.params"></el-input>
       </el-form-item>
       <el-form-item label="cron:" prop="url">
-        <el-input v-model="RoleVo.roleSort"></el-input>
+        <el-input v-model="JobVo.cronExpression"></el-input>
       </el-form-item>
       <el-form-item label="状态:">
         <el-switch
-          v-model="RoleVo.status"
+          v-model="JobVo.status"
           active-text="正常"
           active-value="0"
           active-color="#409EFF"
@@ -32,7 +32,7 @@
         </el-switch>
       </el-form-item>
       <el-form-item label="备注:" prop="visible">
-        <el-input v-model="RoleVo.remark"></el-input>
+        <el-input v-model="JobVo.remark"></el-input>
       </el-form-item>
       <div class="footer">
         <el-button type="warning" size="small" round @click="submit">提交</el-button>
@@ -50,13 +50,14 @@
     props: ['showDialog', 'roleInfo'],
     data () {
       return {
-        RoleVo: {
-          roleId: '',
-          status: '',
-          roleKey: '',
+        JobVo: {
+          jobId: '',
+          jobName: '',
+          jobGroup: '',
+          methodName: '',
+          params: '',
+          cronExpression: '',
           remark: '',
-          roleName: '',
-          roleSort: '',
           menuIdList: []
         },
         show: false,
@@ -73,15 +74,7 @@
         this.showOuterMenu(!this.outerMenu)
       },
       submit: function () {
-        if (this.RoleVo.menuIdList.length === 0) {
-          this.$notify({
-            title: '提示',
-            message: '选菜单,点按钮',
-            type: 'warning'
-          });
-          return;
-        }
-        this.$ajax.post('/role/eidt', this.RoleVo).then((res) => {
+        this.$ajax.post('/job/eidt', this.JobVo).then((res) => {
           if (res.data.code === 100) {
             this.showOuterMenu(!this.outerMenu);
             this.reloadData(true);
@@ -94,27 +87,21 @@
         })
       },
       transmitTree: function (val) {
-        this.RoleVo.menuIdList.length = 0;
-        this.RoleVo.menuIdList = val;
+        this.JobVo.menuIdList.length = 0;
+        this.JobVo.menuIdList = val;
       }
     },
     computed: {
       ...mapState(['outerMenu'])
     },
     created: function () {
-      this.$ajax.get('/menu/select/all').then((res) => {
-        if (res.data != null && res.data.code === 100) {
-          this.menus = res.data.data;
-          this.reloadData(false)
-        }
-      });
       if (this.roleInfo != null) {
-        this.RoleVo.roleId = this.roleInfo.roleId;
-        this.RoleVo.status = this.roleInfo.status;
-        this.RoleVo.roleKey = this.roleInfo.roleKey;
-        this.RoleVo.remark = this.roleInfo.remark;
-        this.RoleVo.roleName = this.roleInfo.roleName;
-        this.RoleVo.roleSort = this.roleInfo.roleSort;
+        this.JobVo.roleId = this.roleInfo.roleId;
+        this.JobVo.status = this.roleInfo.status;
+        this.JobVo.roleKey = this.roleInfo.roleKey;
+        this.JobVo.remark = this.roleInfo.remark;
+        this.JobVo.roleName = this.roleInfo.roleName;
+        this.JobVo.roleSort = this.roleInfo.roleSort;
         if (this.roleInfo.menus != null) {
           this.roleInfo.menus.forEach((val) => {
             this.defaultChecked.push(val.menuId)
