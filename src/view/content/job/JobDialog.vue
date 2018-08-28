@@ -2,9 +2,7 @@
   <dia-log>
     <el-form ref="form" :model="JobVo" label-width="80px" size="mini" slot="outer">
       <el-form-item v-show="false">
-        <label>
-          <input v-model="JobVo.jobId">
-        </label>
+        <input v-model="JobVo.jobId">
       </el-form-item>
       <el-form-item label="任务名称:" prop="menuType">
         <el-input v-model="JobVo.jobName"></el-input>
@@ -24,11 +22,11 @@
       <el-form-item label="状态:">
         <el-switch
           v-model="JobVo.status"
-          active-text="正常"
-          active-value="0"
+          active-text="执行"
+          :active-value="0"
           active-color="#409EFF"
-          inactive-value="1"
-          inactive-text="禁用">
+          :inactive-value="1"
+          inactive-text="暂停">
         </el-switch>
       </el-form-item>
       <el-form-item label="备注:" prop="visible">
@@ -47,7 +45,7 @@
   import DiaLog from '../../../common/dialog/Dialog'
   import CheckBoxTree from '../../../common/tree/CheckBoxTree.vue'
   export default {
-    props: ['showDialog', 'roleInfo'],
+    props: ['showDialog', 'jobInfo'],
     data () {
       return {
         JobVo: {
@@ -57,6 +55,7 @@
           methodName: '',
           params: '',
           cronExpression: '',
+          status: '',
           remark: '',
           menuIdList: []
         },
@@ -95,19 +94,17 @@
       ...mapState(['outerMenu'])
     },
     created: function () {
-      if (this.roleInfo != null) {
-        this.JobVo.roleId = this.roleInfo.roleId;
-        this.JobVo.status = this.roleInfo.status;
-        this.JobVo.roleKey = this.roleInfo.roleKey;
-        this.JobVo.remark = this.roleInfo.remark;
-        this.JobVo.roleName = this.roleInfo.roleName;
-        this.JobVo.roleSort = this.roleInfo.roleSort;
-        if (this.roleInfo.menus != null) {
-          this.roleInfo.menus.forEach((val) => {
-            this.defaultChecked.push(val.menuId)
-          })
-        }
+      if (this.jobInfo != null) {
+        this.JobVo.jobId = this.jobInfo.jobId;
+        this.JobVo.status = this.jobInfo.status;
+        this.JobVo.jobName = this.jobInfo.jobName;
+        this.JobVo.jobGroup = this.jobInfo.jobGroup;
+        this.JobVo.methodName = this.jobInfo.methodName;
+        this.JobVo.params = this.jobInfo.params;
+        this.JobVo.cronExpression = this.jobInfo.cronExpression;
+        this.JobVo.remark = this.jobInfo.remark;
       }
+      console.log(this.JobVo.status)
     }
   }
 </script>

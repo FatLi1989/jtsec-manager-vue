@@ -11,7 +11,7 @@
           </el-form-item>
           <el-form-item label="任务状态：">
             <el-select v-model="JobVo.status">
-              <el-option value="0" label="正常"></el-option>
+              <el-option value="0" label="执行"></el-option>
               <el-option value="1" label="暂停"></el-option>
               <el-option value="2" label="删除"></el-option>
             </el-select>
@@ -65,7 +65,7 @@
             <template slot-scope="scope">
               <el-tag
                 :type="scope.row.status === 0 ? 'success' : 'danger' "
-                disable-transitions>{{scope.row.status === 0 ? '正常' : scope.row.status === 1 ? '暂停' : '删除' }}</el-tag>
+                disable-transitions>{{scope.row.status === 0 ? '执行' : scope.row.status === 1 ? '暂停' : '删除' }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -82,12 +82,12 @@
                 :type="scope.row.status === 0 ? 'warning' : 'primary'"
                 :icon="scope.row.status === 0 ? 'el-icon-time' : 'el-icon-caret-right'"
                 size="mini"
-                @click="handleEdit(scope.$index, scope.row)">{{scope.row.status === 0 ? '暂停' : '启用'}}
+                @click="handleStatus(scope.$index, scope.row)">{{scope.row.status === 0 ? '暂停' : '启用'}}
               </el-button>
               <el-button
                 type="success"
                 size="mini"
-                @click="handleEdit(scope.$index, scope.row)"><i class="el-icon-caret-right">执行</i>
+                @click="handleRun(scope.$index, scope.row)"><i class="el-icon-caret-right">执行</i>
               </el-button>
               <el-button
                 type="danger"
@@ -100,7 +100,7 @@
       </div>
     </form-demo>
     <div class="dialog" v-if="this.outerMenu">
-      <role-dialog :roleInfo="this.roleInfo" :showDialog="this.show"></role-dialog >
+      <job-dialog :jobInfo="this.jobInfo" :showDialog="this.show"></job-dialog>
     </div>
   </div>
 </template>
@@ -109,7 +109,7 @@
   import Calendar from '../../../common/calendar/Calendar.vue'
   import {mapState, mapMutations} from 'vuex'
   import moment from 'moment'
-  import RoleDialog from './JobDialog.vue'
+  import JobDialog from './JobDialog.vue'
 
   export default {
     data () {
@@ -126,9 +126,9 @@
           status: '',
           row: '',
           page: '',
-          roleIdList: []
+          jobIdList: []
         },
-        roleInfo: {}
+        jobInfo: {}
       };
     },
     methods: {
@@ -139,7 +139,7 @@
             this.jobData = res.data.pageInfo.list;
             this.totalCount = res.data.pageInfo.total
           }
-        })
+        });
         this.reloadData(false);
       },
       paging: function (pageInfo) {
@@ -170,7 +170,7 @@
         this.JobVo.status = '';
       },
       del: function () {
-        if (this.RoleVo.roleIdList.length === 0) {
+        if (this.JobVo.jobIdList.length === 0) {
           this.$notify({
             title: '提示',
             message: '快去勾选数据',
@@ -183,7 +183,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$ajax.post('/role/del', this.RoleVo).then((res) => {
+          this.$ajax.post('/job/del', this.JobVo).then((res) => {
             if (res.data.code === 100) {
               this.$notify({
                 title: '成功',
@@ -194,7 +194,7 @@
             } else {
               this.$notify.error({
                 title: '错误',
-                message: res.data.msg
+                message: res.data.meg
               });
             }
           })
@@ -206,33 +206,54 @@
         });
       },
       select: function (selection) {
-        this.RoleVo.roleIdList.length = 0;
+        this.JobVo.jobIdList.length = 0;
         selection.forEach((value, index, arr) => {
-          if (!this.RoleVo.roleIdList.includes(value.roleId)) {
-            this.RoleVo.roleIdList.push(value.roleId)
+          if (!this.JobVo.jobIdList.includes(value.jobId)) {
+            this.JobVo.jobIdList.push(value.jobId)
+          }
+        });
+      },
+      handleStatus: function (index, row) {
+        let jobId = row.jobId;
+        let status = null;
+        if (row.status === 0) {
+          status = 1
+        } else if (row.status === 1) {
+           status = 0
+        }
+        this.$ajax.post('/job/changeStatus', {jobId: jobId, status: status}).then((res) => {
+          if (res.data.code === 100) {
+            this.$notify({
+              title: '提示',
+              message: res.data.meg,
+              type: 'success'
+            });
+            this.reloadData(true);
+          }
+        });
+      },
+      handleRun: function (index, row) {
+        this.$ajax.get('/job/run/' + row.jobId).then((res) => {
+          if (res.data.code === 100) {
+            this.$notify({
+              title: '提示',
+              message: res.data.meg,
+              type: 'success'
+            });
+            this.reloadData(true);
           }
         });
       },
       handleEdit: function (index, row) {
-        if (row.status === 0) {
-          row.status = 1
-        } else if (row.status === 1) {
-          row.status = 0
-        }
-        row.updateTime = null;
-        row.createTime = null;
-        this.$ajax.post('/job/changeStatus', row).then((res) => {
+        this.$ajax.get('/job/select/' + row.jobId).then((res) => {
           if (res.data.code === 100) {
-            this.roleInfo = res.data.data;
+            this.jobInfo = res.data.data;
             this.showOuterMenu(!this.outerMenu);
           }
         });
       },
-      handleDelete: function (index, row) {
-        this.showOuterMenu(!this.outerMenu);
-      },
       showForm: function () {
-        this.roleInfo = null;
+        this.jobInfo = null;
       }
     },
     computed: {
@@ -245,7 +266,7 @@
         }
       }
     },
-    components: {FormDemo, Calendar, RoleDialog},
+    components: {FormDemo, Calendar, JobDialog},
     created: function () {
       this.JobVo.row = this.rows;
       this.JobVo.page = this.pages;

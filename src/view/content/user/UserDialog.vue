@@ -29,9 +29,9 @@
           <el-switch
             v-model="UserVo.status"
             active-text="正常"
-            active-value="0"
+            :active-value="0"
             active-color="#409EFF"
-            inactive-value="1"
+            :inactive-value="1"
             inactive-text="禁用">
           </el-switch>
         </el-form-item>
