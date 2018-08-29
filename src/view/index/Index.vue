@@ -34,5 +34,5 @@
 <style lang="stylus" scoped>
   .index
     display flex
-    height 100vh
+    height 100%
 </style>

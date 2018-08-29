@@ -4,6 +4,7 @@ import Menu from '../view/content/menu/Mune.vue'
 import User from '../view/content/user/User'
 import Role from '../view/content/role/Role'
 import Job from '../view/content/job/Job'
+import Home from '../view/content/home/Home'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 
@@ -18,6 +19,9 @@ const router = new VueRouter({
       path: '/index',
       component: Index,
       children: [{
+        path: '/home',
+        component: Home
+      }, {
         path: '/menu',
         component: Menu
       }, {
@@ -29,7 +33,8 @@ const router = new VueRouter({
       }, {
         path: '/job',
         component: Job
-      }]
+      }],
+      redirect: '/home'
     }
   ]
 });
