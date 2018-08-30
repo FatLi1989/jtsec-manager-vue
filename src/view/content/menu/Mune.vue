@@ -191,10 +191,15 @@
         this.showOuterMenu(!this.outerMenu)
       },
       selectMenu: function () {
+        const loading = this.$loading({
+          text: 'Loading',
+          spinner: 'el-icon-loading'
+        });
         this.$ajax.get('/menu/select/all').then((res) => {
           if (res.data != null && res.data.code === 100) {
             this.menus = res.data.data;
-            this.reloadData(false)
+            this.reloadData(false);
+            loading.close()
           }
         })
       }

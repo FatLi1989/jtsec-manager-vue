@@ -26,6 +26,9 @@
         <el-table
           @select="select"
           :data="jobData"
+          v-loading="load"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
           style="width: 100%">
           <el-table-column
             type="selection"
@@ -114,6 +117,7 @@
   export default {
     data () {
       return {
+        load: '',
         jobData: [],
         pageInfo: '',
         totalCount: 0,
@@ -134,10 +138,12 @@
     methods: {
       ...mapMutations(['reloadData', 'showOuterMenu']),
       selectJobs: function () {
+        this.load = true;
         this.$ajax.post('/job/select/all', this.JobVo).then((res) => {
           if (res.data.code === 100) {
             this.jobData = res.data.pageInfo.list;
-            this.totalCount = res.data.pageInfo.total
+            this.totalCount = res.data.pageInfo.total;
+            this.load = false;
           }
         });
         this.reloadData(false);

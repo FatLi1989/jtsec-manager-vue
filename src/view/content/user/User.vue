@@ -29,6 +29,9 @@
         <el-table
           @select="select"
           :data="userData"
+          v-loading="load"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
           :stripe="true"
           style="width: 100%">
           <el-table-column
@@ -118,10 +121,12 @@
     methods: {
       ...mapMutations(['reloadData', 'showOuterMenu']),
       selectUsers: function () {
+        this.load = true;
         this.$ajax.post('/user/select/all', this.UserVo).then((res) => {
           if (res.data.code === 100) {
             this.userData = res.data.pageInfo.list;
-            this.totalCount = res.data.pageInfo.total
+            this.totalCount = res.data.pageInfo.total;
+            this.load = false
           }
         });
         this.reloadData(false);

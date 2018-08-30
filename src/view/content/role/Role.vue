@@ -29,6 +29,9 @@
         <el-table
           @select="select"
           :data="roleData"
+          v-loading="load"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
           style="width: 100%">
           <el-table-column
             type="selection"
@@ -95,6 +98,7 @@
   export default {
     data () {
       return {
+        load: true,
         roleData: [],
         pageInfo: '',
         totalCount: 0,
@@ -118,10 +122,12 @@
     methods: {
       ...mapMutations(['reloadData', 'showOuterMenu']),
       selectRoles: function () {
+        this.load = true
         this.$ajax.post('/role/select/all', this.RoleVo).then((res) => {
           if (res.data.code === 100) {
             this.roleData = res.data.pageInfo.list;
             this.totalCount = res.data.pageInfo.total
+            this.load = false
           }
         })
         this.reloadData(false);
