@@ -62,13 +62,20 @@
       },
       ...mapMutations(['loginInfo']),
       login: function (userInfo) {
-        this.loginInfo(userInfo)
+        this.loginInfo(userInfo);
+        const loading = this.$loading({
+          lock: true,
+          text: '登陆中，稍等下',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
         this.$ajax.post('login', {
           loginName: userInfo[0],
           password: userInfo[1],
           rememberMe: userInfo[2]
         })
           .then((response) => {
+            loading.close();
             if (response.data != null && response.data.code === 100) {
               router.push('/index')
             } else {

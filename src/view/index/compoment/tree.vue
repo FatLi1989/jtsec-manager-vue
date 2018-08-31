@@ -48,7 +48,7 @@
   .v-enter,.v-leave-to
     opacity: 0
   .v-enter-active,.v-leave-active
-    transition: opacity 0.5s
+    transition: opacity 0.4s
   .item
    width 100%
    height 50px

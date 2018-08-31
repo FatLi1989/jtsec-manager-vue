@@ -53,8 +53,15 @@
             this.rightMenuState(this.rightMenu)
           },
           loginOut: function () {
+            const loading = this.$loading({
+              lock: true,
+              text: '退出中，稍等下',
+              spinner: 'el-icon-loading',
+              background: 'rgba(0, 0, 0, 0.7)'
+            });
             this.$ajax.get('loginOut').then((res) => {
               if (res.data.code === 100) {
+                loading.close();
                 router.push('/login')
               }
             })

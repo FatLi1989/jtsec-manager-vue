@@ -30,6 +30,9 @@
         :render-content="renderContent"
         :expand-on-click-node="false"
         accordion
+        v-loading="load"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
         :filter-node-method="filterNode"
         ref="tree">
       </el-tree>
@@ -54,7 +57,8 @@
         },
         showMenu: false,
         tNode: {},
-        menus: []
+        menus: [],
+        load: true
       }
     },
     computed: {
@@ -191,15 +195,12 @@
         this.showOuterMenu(!this.outerMenu)
       },
       selectMenu: function () {
-        const loading = this.$loading({
-          text: 'Loading',
-          spinner: 'el-icon-loading'
-        });
+        this.load = true;
         this.$ajax.get('/menu/select/all').then((res) => {
           if (res.data != null && res.data.code === 100) {
             this.menus = res.data.data;
             this.reloadData(false);
-            loading.close()
+            this.load = false;
           }
         })
       }
