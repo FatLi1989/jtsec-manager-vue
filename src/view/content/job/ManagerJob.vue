@@ -112,7 +112,7 @@
   import Calendar from '../../../common/calendar/Calendar.vue'
   import {mapState, mapMutations} from 'vuex'
   import moment from 'moment'
-  import JobDialog from './JobDialog.vue'
+  import JobDialog from './ManagerJobDialog.vue'
 
   export default {
     data () {

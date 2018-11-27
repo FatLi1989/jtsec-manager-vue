@@ -18,7 +18,7 @@
           </a>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>
-              <a href="#" style="text-decoration:none" @click="loginOut"><i class="iconfont icon-dengluyemianyonghuming"></i>  退出</a>
+              <a href="#" style="text-decoration:none;display:block;width:100%" @click="loginOut"><i class="iconfont icon-dengluyemianyonghuming"></i>  退出</a>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>

@@ -37,7 +37,6 @@
       }
     },
     methods: {
-      focus: () => alert(1),
       ...mapMutations(['setMenuInfo'])
     },
     computed: {

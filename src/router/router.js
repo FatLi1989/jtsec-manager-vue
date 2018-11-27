@@ -3,7 +3,8 @@ import Index from '../view/index/Index.vue'
 import Menu from '../view/content/menu/Mune.vue'
 import User from '../view/content/user/User'
 import Role from '../view/content/role/Role'
-import Job from '../view/content/job/Job'
+import ManagerJob from '../view/content/job/ManagerJob'
+import AnalysisJob from '../view/content/job/AnalysisJob'
 import Home from '../view/content/home/Home'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
@@ -31,8 +32,11 @@ const router = new VueRouter({
         path: '/role',
         component: Role
       }, {
-        path: '/job',
-        component: Job
+        path: '/manager/job',
+        component: ManagerJob
+      }, {
+        path: '/analysis/job',
+        component: AnalysisJob
       }],
       redirect: '/home'
     }

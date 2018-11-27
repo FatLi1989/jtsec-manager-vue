@@ -11,9 +11,6 @@
         <h4><img src="../../resource/img/Logo.png"/><strong style="color: red;font-size: 30px">&nbsp;&nbsp;国保金泰</strong></h4>
         <ul class="m-b">
           <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Author : NovLi</li>
-          <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Author : YunYang</li>
-          <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Author : DaLao</li>
-          <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Author : WuHan</li>
         </ul>
         <strong>还没有账号？ <a href="#" @click="ToRegister()">立即注册&raquo;</a></strong>
       </div>
@@ -87,7 +84,7 @@
     },
     watch: {
       showMessage: function (newMsg, oldMeg) {
-        let _this = this
+        let _this = this;
         setTimeout(function () {
           _this.showMessage = false
         }, 3000)
